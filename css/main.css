@@ -1,8 +1,6 @@
 body {
-    display: flex;
     justify-content: center;
     align-items: center;
-    height: 10rem;
     margin: 0;
 }
 
@@ -12,4 +10,28 @@ body {
 
 h1 {
     font-size: 5rem;
+    vertical-align: auto;
+}
+
+#chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 30rem;
+    width:  fit-content;
+    max-width: 15rem;
+    border: 1px solid #1954dd;
+    padding: 1rem;
+}
+
+#chat-messages {
+    flex: 1;
+    overflow-y: auto;
+}
+
+#user-input {
+    margin-top: 2rem; 
+    padding: 1rem;
+    width: fit-content;
+    border:thick;
+    outline: none;
 }
