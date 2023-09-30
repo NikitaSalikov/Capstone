@@ -23,8 +23,8 @@ userInput.addEventListener("keydown", function (e) {
         userInput.value = "";
 
         setTimeout(() => {
-            const botMessage = "Reply";
-            displayMessage(botMessage, "Chatbot");
+            botMessage = ChatbotOutput(userMessage);
+            if (botMessage) displayMessage(botMessage, "Chatbot");
         }, 200);
     }
     else if(e.key === "Enter"){
@@ -40,11 +40,62 @@ sendButton.addEventListener("click", function (e) {
         userInput.value = "";
 
         setTimeout(() => {
-            const botMessage = "Reply";
-            displayMessage(botMessage, "Chatbot");
+            botMessage = ChatbotOutput(userMessage);
+            if (botMessage) displayMessage(botMessage, "Chatbot");
         }, 200);
     }
     else{
         alert("Nothing to submit");
     }
 });
+
+function ChatbotOutput(input) {
+    let product;
+    let text = input.toLowerCase().replace(/[^\w\s\d]/gi, "");
+    
+    text = text.replace(/ a /g, " ")
+    .replace(/whats/g, "what is")
+    .replace(/please /g, "")
+    .replace(/ please/g, "");
+
+    if (compare(utterances, answers, text)) {
+        product = compare(utterances, answers, text);
+    }
+    else {
+        product = alternatives[Math.floor(Math.random() * alternatives.length)];
+    }
+    return product;
+}
+
+function compare(utterancesArray, answersArray, string) {
+    let item;
+    for (let x = 0; x < utterancesArray.length; x++) {
+        for (let y = 0; y < utterancesArray[x].length; y++) {
+            if (utterancesArray[x][y] == string) {
+                items = answersArray[x];
+                item = items[Math.floor(Math.random() * items.length)];
+            }
+        }
+    }
+    return item;
+}
+
+const utterances = [
+    ["how are you", "how is life", "how are things"],
+    ["hi", "hey", "hello", "good morning", "good evening", "good day"],
+    ["when do you open", "when is opening time", "are you open"],
+    ["when do you close", "when is closing time", "are you closed"]
+];
+
+const answers = [
+    ["I'm fine, how are you?", "Pretty well, how about you?", "Fantastic, how are you?"],
+    ["Hello!", "Hi!", "Hey!", "Howdy!"],
+    ["We open at 9am today."],
+    ["We close at 10pm today."]
+];
+
+const alternatives = [
+    "Sorry, I don't understand.",
+    "Try again",
+    ""
+];
