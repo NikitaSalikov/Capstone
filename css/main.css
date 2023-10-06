@@ -1,0 +1,44 @@
+body {
+ 
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+}
+
+h1 {
+    font-size: 5rem;
+    vertical-align: auto;
+}
+
+#chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 30rem;
+    width:  fit-content;
+    max-width: 15rem;
+    border: 1px solid #1954dd;
+    padding: 1rem;
+}
+
+#chat-messages {
+    flex: 1;
+    overflow-y: auto;
+}
+
+#user-input {
+    margin-top: 2rem; 
+    padding: 1rem;
+    width: fit-content;
+    border:thick;
+    outline: none;
+}
+
+.field {
+    width:fit-content;
+    max-width: 100%;
+    height: fit-content;
+}
