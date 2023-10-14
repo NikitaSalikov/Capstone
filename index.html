@@ -1,80 +1,227 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" href="../css/style.css"> -->
-    <link rel="stylesheet" href="../css/style1.css">
-    <title>Main Page</title>
-
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
+
 <body>
-    
-    <!-- <div class="wrapper">
-        <header>Login Page</header>
-        <form action="">
-            <div class="row">
-                <label>Login</label>
-                <textarea></textarea>
-            </div>
 
-            <div class="row">
-                <label>Password</label>
-                <textarea></textarea>
+    <div class="chat-container">
+        <div class="leftSide">
+            <!--header-->
+            <div class="header">
+                <div class="userimg">
+                    <img src="restaurant1.jpeg" class="cover">
+                </div>
+                <ul class="nav_icons">
+                    <li><ion-icon name="settings-outline"></ion-icon></li>
+                    <li><ion-icon name="chatbubble-ellipses-outline"></ion-icon></li>
+                    <li><ion-icon name="ellipsis-vertical"></ion-icon></li>
+                </ul>
             </div>
-
-            <div class="row">
-                <label>Select User</label>
-                <div class="outer">
-                    <select></select>
+            <!--search-->
+            <div class="search_chat">
+                <div>
+                    <input type="text" placeholder="Search or start new chat"> 
+                    <ion-icon name="search-outline"></ion-icon>  
                 </div>
             </div>
-            <button>Login</button>
-        </form>
-    </div> -->
 
-    <div class="container" id="container">
-        <div class="form-container as-user">
-            <form action="">
-                <h1>Sign In</h1>
-
-                <span>as User</span>
-                <input type="text" placeholder="Name">
-                <input type="email" placeholder="Email">
-                <input type="password" placeholder="Password">
-                <button>Sign Up</button>
-            </form>
-        </div>
-        <div class="form-container as-business">
-            <form action="">
-                <h1>Sign in</h1>
-
-                <span>as Business</span>
-                <input type="text" placeholder="Name">
-                <input type="email" placeholder="Email">
-                <input type="password" placeholder="Password">
-                <a href="#">Forgot Password?</a>
-                <button>Sign in</button>
-            </form>
-        </div>
-        <div class="toggle-container">
-            <div class="toggle">
-                <div class="toggle-panel toggle-left">
-                    <h1>Hello Business</h1>
-                    <p>...or sign in as user</p>
-                    <button class="hidden" id="login">Sign In as User</button>
+            <!--chatlist-->
+            <div class="chatlist">
+                <div class="block">
+                    <div class="imgbx">
+                        <img src="profile1.jpeg" class="cover">
+                    </div>
+                    <div class="details">
+                        <div class="listHead">
+                            <h4>Jennifer Yan</h4>
+                            <p class="time">9:30</p>
+                        </div>
+                        <div class="message_p">
+                            <p>No, thank you, I only want pizza.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="toggle-panel toggle-right">
-                    <h1>Hi, User!</h1>
-                    <p>...or sign in as business</p>
-                    <button class="hidden" id="register">Sign in as Business</button>
+
+                <div class="block">
+                    <div class="imgbx">
+                        <img src="profile2.jpeg" class="cover">
+                    </div>
+                    <div class="details">
+                        <div class="listHead">
+                            <h4>Ghaida Almalki</h4>
+                            <p class="time">09:25</p>
+                        </div>
+                        <div class="message_p">
+                            <p>Hi,I found you on youtube</p>
+                            <b>1</b>
+                        </div>
+                    </div>
+                </div>
+                <div class="block">
+                    <div class="imgbx">
+                        <img src="profile3.jpeg" class="cover">
+                    </div>
+                    <div class="details">
+                        <div class="listHead">
+                            <h4>Henry Reed</h4>
+                            <p class="time">07:28</p>
+                        </div>
+                        <div class="message_p">
+                            <p>I can email him. what do you think?</p>
+                            <b>3</b>
+                        </div>
+                    </div>
+                </div>
+                <div class="block">
+                    <div class="imgbx">
+                        <img src="profile4.jpeg" class="cover">
+                    </div>
+                    <div class="details">
+                        <div class="listHead">
+                            <h4>Nikita Salikov</h4>
+                            <p class="time">03:28</p>
+                        </div>
+                        <div class="message_p">
+                            <p>What do you think about the mock up? </p>
+                            <b>2</b>
+                        </div>
+                    </div>
+                </div>
+                <div class="block">
+                    <div class="imgbx">
+                        <img src="profile5.jpeg" class="cover">
+                    </div>
+                    <div class="details">
+                        <div class="listHead">
+                            <h4>Ariel Gutierrez</h4>
+                            <p class="time">01:25</p>
+                        </div>
+                        <div class="message_p">
+                            <p>Do you know how to do this?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="block">
+                    <div class="imgbx">
+                        <img src="profile6.jpeg" class="cover">
+                    </div>
+                    <div class="details">
+                        <div class="listHead">
+                            <h4>Diana</h4>
+                            <p class="time">yesterday</p>
+                        </div>
+                        <div class="message_p">
+                            <p>nice to talk with you earlier today</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="block">
+                    <div class="imgbx">
+                        <img src="profile7.jpeg" class="cover">
+                    </div>
+                    <div class="details">
+                        <div class="listHead">
+                            <h4>Kabir</h4>
+                            <p class="time">08/10/2023</p>
+                        </div>
+                        <div class="message_p">
+                            <p>Thank you for the help</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="block">
+                    <div class="imgbx">
+                        <img src="profile8.jpeg" class="cover">
+                    </div>
+                    <div class="details">
+                        <div class="listHead">
+                            <h4>Joseph</h4>
+                            <p class="time">07/10/2023</p>
+                        </div>
+                        <div class="message_p">
+                            <p>How to place an order from your website?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="block">
+                    <div class="imgbx">
+                        <img src="profile9.jpeg" class="cover">
+                    </div>
+                    <div class="details">
+                        <div class="listHead">
+                            <h4>Ashraf</h4>
+                            <p class="time">03/10/2023</p>
+                        </div>
+                        <div class="message_p">
+                            <p>Do you know how to do this?</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
+        <div class="rightSide">
+            <div class="header">
+                <div class="imgText">
+                    <div class="userimg">
+                        <img src="profile1.jpeg" class="cover">
+                    </div>
+                    <h4>Jennifer Yan<br><span>Online</span></h4>
+                </div>
+                <ul class="nav_icons">
+                    <li><ion-icon name="ellipsis-horizontal"></ion-icon></li>
+                </ul>
+            </div>
+            
+            <!--Chatbox-->
+            <div class="chatbox">
+                <div class="chat-messages my_message">
+                    <p>Hi<br><span>9:25</span></p>
+                </div>
+                <div class="chat-messages frnd_message">
+                    <p>Hello<br><span>9:25</span></p>
+                </div>
+                <div class="chat-messages my_message">
+                    <p>How can I help you Jennifer?<br><span>9:26</span></p>
+                </div>
+                <div class="chat-messages frnd_message">
+                    <p>Yes, I was wondering if I can order here?<br><span>9:26</span></p>
+                </div>
+                <div class="chat-messages my_message">
+                    <p>Of course.<br><span>9:27</span></p>
+                </div>
+                <div class="chat-messages my_message">
+                    <p>What can I get for you?<br><span>9:27</span></p>
+                </div>
+                <div class="chat-messages frnd_message">
+                    <p>emmm..<br><span>9:28</span></p>
+                </div>
+                <div class="chat-messages frnd_message">
+                    <p>I would like to get a Hawaii Pizza.<br><span>9:29</span></p>
+                </div>
+                <div class="chat-messages my_message">
+                    <p>Sure, would you like to make it meal?<br><span>9:30</span></p>
+                </div>
+                <div class="chat-messages frnd_message">
+                    <p>No, thank you, I only want pizza.<br><span>9:30</span></p>
+                </div>
+        
+            </div>
+            <div class="chatbox_input">
+                <ion-icon name="happy-outline"></ion-icon>
+                <ion-icon name="attach-outline"></ion-icon>
+                <input type="text" placeholder="Type a message">
+                <ion-icon name="send" id="send-button"></ion-icon>
 
+            </div>
+        </div>
+</div>
 
-    <script src="index.js"></script>
+    <script src="script.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 </html>
+
