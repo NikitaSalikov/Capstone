@@ -7,18 +7,21 @@ import React from "react";
 import { withAuthenticator } from "@aws-amplify/ui-react";
 
 //importing mutations to create and store Users objects
-import { API } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
 import * as mutations from "./graphql/mutations";
 
 //importing queries to fetch the data from AWS
 import * as queries from "./graphql/queries";
 import intlFormatDistance from "date-fns/intlFormatDistance";
 
+import * as subscriptions from "./graphql/subscriptions";
+
 function App({ user, signOut }) {
   const [chats, setChats] = React.useState([]);
 
   //fetching users
   React.useEffect(() => {
+    
     async function fetchUsers() {
       const allUsers = await API.graphql({
         query: queries.listUsers,
@@ -27,6 +30,15 @@ function App({ user, signOut }) {
       setChats(allUsers.data.listUsers.items);
     }
     fetchUsers();
+
+    const sub = API.graphql(
+      graphqlOperation(subscriptions.onCreateUser)
+    ).subscribe({
+      next: ({provider, value}) =>
+      setChats((prev) => [...prev, value.data.onCreateUser]),
+      error: (err) => console.log(err),
+    });
+    return () => sub.unsubscribe();
   }, []);
 
   return (
@@ -75,7 +87,7 @@ function App({ user, signOut }) {
                 onKeyUp={async (e) => {
                   if (e.key === "Enter") {
                     await API.graphql({
-                      query: mutations.createUsers,
+                      query: mutations.createUser,
                       variables: {
                         input: {
                           text: e.target.value,
@@ -83,6 +95,7 @@ function App({ user, signOut }) {
                         },
                       },
                     });
+                    e.target.value = "";
                   }
                 }}
                 className="block w-full rounded-md border-0 py-1.5 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
