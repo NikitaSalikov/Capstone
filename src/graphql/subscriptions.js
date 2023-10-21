@@ -1,9 +1,9 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateUser = /* GraphQL */ `
-  subscription OnCreateUser($filter: ModelSubscriptionUserFilterInput) {
-    onCreateUser(filter: $filter) {
+export const onCreateChat = /* GraphQL */ `
+  subscription OnCreateChat($filter: ModelSubscriptionChatFilterInput) {
+    onCreateChat(filter: $filter) {
       id
       text
       email
@@ -13,9 +13,9 @@ export const onCreateUser = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateUser = /* GraphQL */ `
-  subscription OnUpdateUser($filter: ModelSubscriptionUserFilterInput) {
-    onUpdateUser(filter: $filter) {
+export const onUpdateChat = /* GraphQL */ `
+  subscription OnUpdateChat($filter: ModelSubscriptionChatFilterInput) {
+    onUpdateChat(filter: $filter) {
       id
       text
       email
@@ -25,9 +25,9 @@ export const onUpdateUser = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteUser = /* GraphQL */ `
-  subscription OnDeleteUser($filter: ModelSubscriptionUserFilterInput) {
-    onDeleteUser(filter: $filter) {
+export const onDeleteChat = /* GraphQL */ `
+  subscription OnDeleteChat($filter: ModelSubscriptionChatFilterInput) {
+    onDeleteChat(filter: $filter) {
       id
       text
       email

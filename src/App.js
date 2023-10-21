@@ -24,18 +24,18 @@ function App({ user, signOut }) {
     
     async function fetchUsers() {
       const allUsers = await API.graphql({
-        query: queries.listUsers,
+        query: queries.listChats,
       });
-      console.log(allUsers.data.listUsers.items);
-      setChats(allUsers.data.listUsers.items);
+      console.log(allUsers.data.listChats.items);
+      setChats(allUsers.data.listChats.items);
     }
     fetchUsers();
 
     const sub = API.graphql(
-      graphqlOperation(subscriptions.onCreateUser)
+      graphqlOperation(subscriptions.onCreateChat)
     ).subscribe({
       next: ({provider, value}) =>
-      setChats((prev) => [...prev, value.data.onCreateUser]),
+      setChats((prev) => [...prev, value.data.onCreateChat]),
       error: (err) => console.log(err),
     });
     return () => sub.unsubscribe();
@@ -87,7 +87,7 @@ function App({ user, signOut }) {
                 onKeyUp={async (e) => {
                   if (e.key === "Enter") {
                     await API.graphql({
-                      query: mutations.createUser,
+                      query: mutations.createChat,
                       variables: {
                         input: {
                           text: e.target.value,
