@@ -1,4 +1,6 @@
 node_modules
+src/ui-components
+.vscode/settings.json
 
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
