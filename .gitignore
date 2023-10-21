@@ -2,6 +2,7 @@ node_modules
 src/ui-components
 .vscode/settings.json
 amplify
+src/graphql
 
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
