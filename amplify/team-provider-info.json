@@ -1,0 +1,20 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-communicationportal-staging-80002-authRole",
+      "UnauthRoleArn": "arn:aws:iam::408575190822:role/amplify-communicationportal-staging-80002-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::408575190822:role/amplify-communicationportal-staging-80002-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-communicationportal-staging-80002-deployment",
+      "UnauthRoleName": "amplify-communicationportal-staging-80002-unauthRole",
+      "StackName": "amplify-communicationportal-staging-80002",
+      "StackId": "arn:aws:cloudformation:us-east-2:408575190822:stack/amplify-communicationportal-staging-80002/0303c9c0-6bfa-11ee-aa27-0a9c3a2e2e85",
+      "AmplifyAppId": "d3x7lazgqa7s1"
+    },
+    "categories": {
+      "auth": {
+        "CommunicationPortal": {}
+      }
+    }
+  }
+}
