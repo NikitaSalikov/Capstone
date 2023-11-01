@@ -1,13 +1,13 @@
 
-import './App.css';
-import ChatList from './ChatList';
-import MessageContainer from './MessageContainer';
-import React, { useState } from 'react';
+//import './App.css';
+//import ChatList from './ChatList';
+//import MessageContainer from './MessageContainer';
+//import React, { useState } from 'react';
 
 //need to use react icon lib to replace those ugly buttons
 
 function App() {
-
+/*
   const [message, setMessage] = useState(''); // State to store the message
   const [chatMessages, setChatMessages] = useState([]); // State to store chat messages
 
@@ -83,6 +83,7 @@ function App() {
         </div>
         </div>
   );
+  */
 }
 
 export default App;

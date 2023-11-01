@@ -1,0 +1,6 @@
+portal/amplify
+portal/.vscode
+portal/node_modules
+portal/src/graphql
+portal/package.json
+portal/package-lock.json
