@@ -13,8 +13,8 @@ function ChatPage({user, signOut})
     const [message, setMessage] = useState(""); // State to store the message
     const [chatMessages, setChatMessages] = useState([]); // State to store chat messages
     
-    const [sender, setSenderID] = useState("");
-    const [receiver, setReceiverID] = useState("");
+    const [sender, setSenderID] = useState("902ecd81-37c1-498d-ae23-e964d70d0f91");
+    const [receiver, setReceiverID] = useState("902ecd81-37c1-498d-ae23-e964d70d0f91");
     
     // send click event function
     const handleSendClick = () => {
@@ -22,19 +22,19 @@ function ChatPage({user, signOut})
       setChatMessages([...chatMessages, newMessage]); // Add the message to chatMessages
       setMessage(''); 
     };
-
+    /*
     React.useEffect(() => {
         // Hard coded for now...
-        setSenderID("3451f67c-c692-4a06-aff3-140c79434145");
-        setReceiverID("2790ac85-4a50-4a01-b9e7-821fc1824fcc");
+        setSenderID('902ecd81-37c1-498d-ae23-e964d70d0f91');
+        setReceiverID('902ecd81-37c1-498d-ae23-e964d70d0f91');
     }, []);
-
+    */
     return(
     <div className="chat-container">
         <div className="leftSide">
             <div className="header">
                 <div className="userimg">
-                    <img src="restaurant1.jpeg" className="cover" alt="User" />
+                    <img src="restaurant1.jpeg" className="cover" alt={sender} />
                 </div>
                 <ul className="nav_icons">
                     <li>
@@ -59,7 +59,6 @@ function ChatPage({user, signOut})
 
             <ChatList
                 userId={sender}
-                receiverId={receiver}
                 setReceiverID={setReceiverID}
             />
 
@@ -72,7 +71,7 @@ function ChatPage({user, signOut})
                         <img src="profile1.jpeg" className="cover" alt="User" />
                     </div>
                     <h4>
-                        {sender}
+                        {receiver}
                         <br />
                         <span>Online</span>
                     </h4>

@@ -1,82 +1,115 @@
 import React from 'react';
 
 import { API } from "aws-amplify";
-import { listChatMessages, getUser } from "../graphql/queries";
+import { getUser, getLocation ,listChatGroups } from "../graphql/queries";
+
+//importing authenticator
+import { withAuthenticator } from "@aws-amplify/ui-react";
 
 //import intlFormatDistance from "date-fns/intlFormatDistance";
 //import { queries } from '@testing-library/react';
 
-function ChatList({userId, receiverId, setReceiverID}) {
-    //console.log("Sender: " + userId);
-    console.log("Receiver: " + receiverId);
+function ChatList({userId, setReceiverID}) {
+    const [isLocation, setIsLocation] = React.useState(0);
+    // 0 - Not Set
+    // 1 - User
+    // 2 - Location
 
-    const [receiverIds, setReceivers] = React.useState([]);
-    const [receiverNames, setNames] = React.useState([]);
+    const [chatGroups, setChatGroups] = React.useState([]);
+    const [groupNames, setGroupNames] = React.useState([]);
 
     React.useEffect(() => {
-        // Get ids of receivers
-        async function GetReceiversFromMessages() {
-            const receivers = await API.graphql({
-                query: listChatMessages,
-                filter : { senderId : {userId}, },
-            });
-            console.log("receivers" + receivers.data.items.receiverId);
-            //setReceivers(receivers.data.items.receiverId);
-        }
-
-        // Get name from id
-        async function getName(Id) {
-            console.log(Id);
-            if (Id !== "") {
-                const name = await API.graphql({
+        if(userId !== "") {
+            async function IsLocation() {
+                const user = await API.graphql({
                     query: getUser,
-                    variables: { id : Id }
+                    variables: {id: userId}
                 });
-                
-                setNames([
-                    ...receiverNames,
-                    { firstName: name.data.givenName, lastName: name.data.familyName }
-                ]);
-                console.log(name);
+                if (user.data.getUser !== null) setIsLocation(1);
+                else setIsLocation(2)
             }
+            IsLocation();
+            
+        }
+    }, [userId]);
+
+    React.useEffect(() => {
+        function variableSetter() {
+            if (isLocation === 2) {
+                return {filter: {locationID: {contains: userId}}};
+            }
+            else if (isLocation === 1){
+                return {filter: {userID: {contains: userId}}};
+            }
+        }
+        const variables = variableSetter();
+
+        async function fetchGroups() {
+            const groups = await API.graphql( {
+                query: listChatGroups,
+                variables: variables
+            })
+            setChatGroups(groups.data.listChatGroups.items);
+        }
+        if (isLocation !== 0) fetchGroups();
+    }, [isLocation]);
+
+    React.useEffect(() => {
+        /*
+        async function fetchUserName(Id) {
+            const user = await API.graphql( {
+                query: getUser,
+                variables: {id: Id}
+            });
+            const name = user.givenName + user.familyName;
+            return name;
         }
 
-        //GetReceiversFromMessages();
-        //console.log(chatMessages)
-    
-        if (receiverId !== "" && receiverIds.indexOf(receiverId) === -1) {
-            setReceivers([
-                ...receiverIds,
-                receiverId
-            ]);
-            //console.log(receiverId);
-            //getName(receiverId);
-        }
-        /*
-        if (chatMessages.length > 0) {
-            chatMessages.map(message => {
-            if (receivers.indexOf(message.receiverID) === -1){
-                receivers.concat(message.receiverID);
-            }
+        async function fetchLocationName(Id) {
+            const location = await API.graphql( {
+                query: getLocation,
+                variables: {id: Id}
             });
+            return location.name;
         }
         */
+        if (chatGroups !== undefined)
+        {
+            if (isLocation === 2)
+            {
+                chatGroups.forEach((group) => {
+                    setGroupNames((groupNames) => ([...groupNames, group.userID]));
+                });
+            }
+            else if (isLocation === 1){
+                chatGroups.forEach( (group) => {
+                    setGroupNames((groupNames) => ([...groupNames, group.locationID]));
+                });
+            }
+        }
+    }, [chatGroups]);
 
-        //setReceivers(uniqueReceivers);
-        
-    }, [userId, receiverId]);
-    //console.log(receiverNames)
-
-    if (receiverIds.length > 0) {
-        const chatList = receiverIds.map((receiver) =>
+    if (groupNames.length > 0) {
+        //console.log(groupNames);
+        const chatList = groupNames.map((name, index) =>
         <div className="block">
-            <div className="imgbx">
+            {/*<div className="imgbx">
                 <img src="profile1.jpeg" className="cover" />
-            </div>
+            </div>*/}
             <div className="details">
                 <div className="listHead">
                     <h4>
-                        {receiver}
+                        <button name="group-name"
+                        id="name-button"
+                        onClick={() => {
+                            if (isLocation === 2) {
+                                setReceiverID(chatGroups.at(index).userID);
+                            }
+                            else if (isLocation === 1) {
+                                setReceiverID(chatGroups.at(index).locationID);
+                            }}}>
+                            {name}
+                        </button>
                     </h4>
                 </div>
             </div>
@@ -88,14 +121,13 @@ function ChatList({userId, receiverId, setReceiverID}) {
         </div>
         );
     }
-
+    
     else {
         return (
         <div className="chatlist">
             No Chats
         </div>);
     }
-
     
     /*
     return (
