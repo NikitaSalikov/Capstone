@@ -54,6 +54,9 @@ function MessageContainer({ chatGroup, sender, receiver }) {
     }
   };
 
+  const sortedChatMessages = chatMessages.slice().sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+
   // add waiting
   if (!chatGroup || !chatGroup.id) {
     return <div>Loading...</div>;
@@ -62,7 +65,7 @@ function MessageContainer({ chatGroup, sender, receiver }) {
   return (
     <div>
       <div className="chatbox">
-        {chatMessages.map((message) => (
+        {sortedChatMessages.map((message) => (
           <div
             className={`chat-messages ${message.senderID === sender ? 'my_message' : 'frnd_message'}`}
             key={message.id}
