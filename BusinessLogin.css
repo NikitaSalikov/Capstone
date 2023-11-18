@@ -1,0 +1,101 @@
+.businessLogin {
+    
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.loginCard {
+    background-color: rgba(255, 255, 255, 0.866);
+    box-shadow: 0px 0px 15px rgba(200, 114, 114, 0.3);
+    padding: 35px;
+    width: 450px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo 
+{
+    height: 75px;
+    width: 75px;
+    margin-bottom: 25px;
+}
+
+h2 
+{
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: black;  /* Log In to Your Account */
+}
+
+h3
+ {
+    margin-bottom: 25px;
+    font-size: 4%;
+    color: #77d0fc; /* Hello Business */
+}
+
+form 
+{
+    width: 150%;
+    flex-direction: column;
+    align-items: center;
+    display: flex;
+}
+
+input[type="userName"], input[type="password"] 
+{
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.RememberMe {
+    width: 100%;
+    display: flex;
+    justify-content: space-between; /* space between remember me and Forgot Password? */
+    align-items: center;
+    margin: 20px 10;
+}
+
+.loginButton {
+    width: 100%;
+    padding: 15px;
+    background-color: #77d0fc; 
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.signupChoice {
+    margin-top: 10px;
+    font-size: 90px;
+}
+
+.signupChoice a {
+    color: #77d0fc; 
+    text-decoration: none;
+    text-decoration: underline;
+}
+
+
+
+.forgotPassword {
+    cursor: pointer;
+    color: #77d0fc; 
+    text-decoration: underline;
+}
+
