@@ -60,39 +60,47 @@ function MessageContainer({ chatGroup, sender, receiver }) {
   }
   console.log("TIMESTAMP: ",chatMessages.createdAt);
   return (
-    <div className="chatbox">
-      {chatMessages.map((message) => (
-        <div
-          className={`chat-messages ${message.senderID === sender ? 'my_message' : 'frnd_message'}`}
-          key={message.id}
-        >
-          <p>
-            {message.data}
-            <br />
-            <span>
-              <time
-                dateTime={message.createdAt}
-                className="flex-none py-0.5 text-xs leading-5 text-gray-500"
-              >
-                {isValidDate(message.createdAt)
-                ? intlFormatDistance(new Date(message.createdAt), new Date())
-                : 'Invalid Date'}
-              </time>
-            </span>
-          </p>
-        </div>
-      ))}
+    <div>
+      <div className="chatbox">
+        {chatMessages.map((message) => (
+          <div
+            className={`chat-messages ${message.senderID === sender ? 'my_message' : 'frnd_message'}`}
+            key={message.id}
+          >
+            <p>
+              {message.data}
+              <br />
+              <span>
+                <time
+                  dateTime={message.createdAt}
+                  className="flex-none py-0.5 text-xs leading-5 text-gray-500"
+                >
+                  {isValidDate(message.createdAt)
+                  ? intlFormatDistance(new Date(message.createdAt), new Date())
+                  : 'Invalid Date'}
+                </time>
+              </span>
+            </p>
+          </div>
+        ))}
+      </div>
 
-      {/* This is a bad example */}
-      <form onSubmit={handleSendMessage}>
+      <div className="chatbox_input">
+        {/* This is a bad example */}
+        <button name="happy-outline">emoji</button>
+        <button name="attach-outline">file</button>
         <input
-          type="text"
-          placeholder="Type a message"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-        />
-        <button type="submit">Send</button>
-      </form>
+            type="text"
+            placeholder="Type a message"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+          />
+          <button name="send" id="send-button" onClick={handleSendMessage}>Send</button>
+
+        <form onSubmit={handleSendMessage}>
+          
+        </form>
+      </div>
     </div>
   );
 }

@@ -49,7 +49,74 @@ function ChatPage({ user, signOut }) {
     setActiveChat(clickedChatGroup);
   };
 
+  return (
+    <div className="chat-container">
+      <div className="leftSide">
+        <div className="header">
+          <div className="userimg">
+            <img src="restaurant1.jpeg" className="cover" alt={sender} />
+          </div>
+          <ul className="nav_icons">
+            <li>
+              {/*<a href="settings.html">*/}
+                <button name="settings-outline" onClick={() => signOut()}>Setting</button>
+              {/*</a>*/}
+            </li>
+            <li>
+              <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+            </li>
+            <li>
+              <ion-icon name="ellipsis-vertical"></ion-icon>
+            </li>
+          </ul>
+        </div>
 
+        <div className="search_chat">
+          <div>
+            <input type="text" placeholder="Search chat" />
+            <button name="SearchOutline">?</button>
+          </div>
+        </div>
+        
+        <ChatList
+          chatGroups={chatGroup}
+          onChatGroupClick={ChatChosen}
+        />
+      </div>
+
+      <div className="rightSide">
+        <div className="header">
+          <div className="imgText">
+            <div className="userimg">
+              <img src="profile1.jpeg" className="cover" alt="User" />
+            </div>
+            
+            <h4>
+              {activeChat && (activeChat.locationID)}
+                <br />
+                <span>Online</span>
+            </h4>
+
+          </div>
+          <ul className="nav_icons">
+            <li>
+              <ion-icon name="ellipsis-horizontal"></ion-icon>
+            </li>
+          </ul>
+        </div>
+
+        {activeChat && (
+        <MessageContainer
+          chatGroup={activeChat}
+          sender={sender}
+          receiver={activeChat.locationID}
+        />
+        )}
+      </div>
+    </div>
+  );
+
+/*
   return (
     <div className="chat-container">
       <div className="leftSide">
@@ -72,7 +139,7 @@ function ChatPage({ user, signOut }) {
           )}
         </div>
       </div>
-    );
+    );*/
   }
 
 export default withAuthenticator(ChatPage);
