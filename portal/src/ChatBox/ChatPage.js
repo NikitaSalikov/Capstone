@@ -2,8 +2,9 @@ import './ChatPage.css';
 import React, { useState, useEffect } from 'react';
 import ChatList from './ChatList';
 import MessageContainer from './MessageContainer';
+import ChatBot from './ChatBot';
 import { API, graphqlOperation } from 'aws-amplify';
-import { listChatGroups, getChatGroup, listChatMessages } from './../graphql/queries';
+import { listChatGroups, getLocation, getChatGroup, listChatMessages } from './../graphql/queries';
 import { createChatMessage } from '../graphql/mutations';
 import * as queries from "./../graphql/queries";
 
@@ -12,15 +13,16 @@ import { withAuthenticator } from "@aws-amplify/ui-react";
 
 
 function ChatPage({ user, signOut }) {
-  const [sender, setSenderID] = useState("");
+  const [sender, setSenderID] = useState("3451f67c-c692-4a06-aff3-140c79434145");
   const [receiver, setReceiverID] = useState("");
   const [chatGroup, setChatGroup] = useState([]);
   const [activeChat, setActiveChat] = useState(null);
-
+  const [useBot, setUseBot] = useState(true);
+/*
   useEffect(() => {
-    setSenderID("3451f67c-c692-4a06-aff3-140c79434145"); // hardcoded for now
+    setSenderID("3451f67c-c692-4a06-aff3-140c79434145"/*"902ecd81-37c1-498d-ae23-e964d70d0f91"); // hardcoded for now
   }, []);
-
+*/
   useEffect(() => {
     // fetching ChatGroups
     async function fetchChatGroups() {
@@ -29,9 +31,10 @@ function ChatPage({ user, signOut }) {
           query: listChatGroups,
           variables: {
             filter: {
-              userID: {
-                eq: "3451f67c-c692-4a06-aff3-140c79434145" //the current cognito user id ex.
-              }
+              or: [
+                {userID: {eq: sender}},
+                {locationID: {eq: sender}}
+              ]
             }
           }
         });
@@ -44,7 +47,24 @@ function ChatPage({ user, signOut }) {
 
     fetchChatGroups();
   }, [sender]);
+  /*
+  useEffect(() => {
+    async function fetchLocation(locationID) {
+      try {
+        const result = await API.graphql({
+          query: getLocation,
+          variables: {id: locationID}
+        });
+        console.log("Use effect result:", result.data.listChatGroups.items);
+        setChatGroup(result.data.listChatGroups.items);
+      } catch (error) {
+        console.error("Error fetching location:", error);
+      }
+    }
 
+    fetchLocation("902ecd81-37c1-498d-ae23-e964d70d0f91")
+  }, [sender]);
+  */
   const ChatChosen = (clickedChatGroup) => {
     setActiveChat(clickedChatGroup);
   };
@@ -105,7 +125,15 @@ function ChatPage({ user, signOut }) {
           </ul>
         </div>
 
-        {activeChat && (
+        {activeChat && useBot && (
+          <ChatBot
+            setUseBot={setUseBot}
+            sender={sender}
+            receiver={receiver}
+          />
+        )}
+
+        {activeChat && !useBot && (
         <MessageContainer
           chatGroup={activeChat}
           sender={sender}
