@@ -1,0 +1,149 @@
+type ChatGroup @model @auth(rules: [{allow: private}]) {
+  id: ID!
+  userID: String!
+  locationID: String!
+  ChatMessages: [ChatMessage!] @hasMany(indexName: "byChatGroup", fields: ["id"])
+}
+
+type ChatMessage @model @auth(rules: [{allow: private}]) {
+  id: ID!
+  senderID: ID!
+  receiverID: ID!
+  data: String
+  timeStamp: AWSTimestamp
+  isFile: Boolean
+  chatgroupID: ID! @index(name: "byChatGroup")
+}
+
+type Keywords @model @auth(rules: [{allow: private, operations: [read]}, {allow: public, operations: [read]}]) {
+  id: ID!
+  keyword: String
+}
+
+type Social {
+  type: String
+  address: String
+}
+
+type LiveSnap @model @auth(rules: [{allow: owner}, {allow: public, operations: [read]}, {allow: groups, groups: ["Admin"], operations: [read, update, delete]}, {allow: groups, groups: ["Business"], operations: [create, update, read]}, {allow: groups, groups: ["Regular"], operations: [read]}]) {
+  id: ID!
+  video: String
+  expirationUnixTime: AWSTimestamp
+}
+
+enum Status {
+  WAITING
+  REJECTED
+  APPROVED
+}
+
+type Story {
+  story: AWSURL
+  PostDate: AWSDateTime
+}
+
+type LocationImage {
+  type: String!
+  key: String!
+}
+
+type Address {
+  address: String!
+  unit: String
+  city: String!
+  country: String!
+  state: String!
+  postalcode: String!
+  geoLocation: Coordinates!
+}
+
+type LocationHours {
+  open: Boolean!
+  startTime: String
+  endTime: String
+  name: String!
+}
+
+type User @model @auth(rules: [{allow: private, operations: [create, read]}, {allow: owner, operations: [create, read, update]}, {allow: groups, groups: ["Admin"], operations: [read, update, delete]}]) {
+  id: ID!
+  gender: String
+  dob: AWSDate
+  interests: [String!]!
+  cognitoUser: ID!
+  givenName: String
+  familyName: String
+  myFavourites: [ID]
+}
+
+type BusinessDocument {
+  document: String!
+  documentType: String!
+}
+
+type Amenitie {
+  value: String!
+  label: String!
+  icon: String!
+}
+
+type Review @model @auth(rules: [{allow: owner}, {allow: groups, groups: ["Regular"], operations: [create]}, {allow: groups, groups: ["Admin"], operations: [read, update, delete]}, {allow: groups, groups: ["Business"], operations: [read]}, {allow: public, operations: [read]}]) {
+  id: ID!
+  description: String!
+  flag: String
+  locationID: ID! @index(name: "byLocation")
+  rating: Float!
+  ownerName: String!
+}
+
+type Coordinates {
+  lat: Float!
+  lng: Float!
+}
+
+type Location @model @auth(rules: [{allow: groups, groups: ["Business"], operations: [create]}, {allow: groups, groups: ["Admin"], operations: [read, update, delete]}, {allow: owner, operations: [create, read, update]}, {allow: public, operations: [read]}]) {
+  id: ID!
+  amenities: [Amenitie!]!
+  address: Address!
+  name: String!
+  category: String!
+  businessID: ID! @index(name: "byBusiness")
+  description: String!
+  email: AWSEmail!
+  hours: [LocationHours!]!
+  images: [LocationImage!]
+  phoneNumber: AWSPhone!
+  liveView: String
+  status: Status!
+  Reviews: [Review] @hasMany(indexName: "byLocation", fields: ["id"])
+  LiveSnap: LiveSnap @hasOne
+  latitude: Float!
+  longitude: Float!
+  keywords: [String!]!
+  locationImage: String!
+  isPublished: Boolean!
+  social: [Social]
+  searchField: String
+  avgRating: Float
+  websiteURL: String
+}
+
+type Business @model @auth(rules: [{allow: owner, ownerField: "cognitoUser", operations: [create, read, update]}, {allow: groups, groups: ["Business"], operations: [create]}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}]) {
+  id: ID!
+  description: String!
+  address: Address!
+  name: String!
+  number: Int!
+  phone: AWSPhone!
+  size: String!
+  type: String!
+  websiteUrl: AWSURL
+  createdDate: AWSDateTime!
+  status: Status!
+  cognitoUser: ID!
+  Locations: [Location] @hasMany(indexName: "byBusiness", fields: ["id"])
+  documents: [BusinessDocument!]!
+  identityId: String!
+  email: AWSEmail!
+  searchField: String!
+}
+ 

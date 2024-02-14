@@ -1,0 +1,20 @@
+## [Start] Parse owner field auth for Get. **
+#if( $util.isList($ctx.source.cognitoUser) )
+  #set( $ownerEntitiesList = [] )
+  #set( $cognitoUser = $ctx.source.cognitoUser )
+  #foreach( $entities in $cognitoUser )
+    #set( $ownerEntities = $entities.split("::") )
+    #set( $ownerEntitiesLastIdx = $ownerEntities.size() - 1 )
+    #set( $ownerEntitiesLast = $ownerEntities[$ownerEntitiesLastIdx] )
+    $util.qr($ownerEntitiesList.add($ownerEntitiesLast))
+  #end
+  $util.qr($ctx.source.cognitoUser.put($ownerEntitiesList))
+  $util.toJson($ownerEntitiesList)
+#else
+  #set( $ownerEntities = $ctx.source.cognitoUser.split("::") )
+  #set( $ownerEntitiesLastIdx = $ownerEntities.size() - 1 )
+  #set( $ownerEntitiesLast = $ownerEntities[$ownerEntitiesLastIdx] )
+  $util.qr($ctx.source.put("cognitoUser", $ownerEntitiesLast))
+  $util.toJson($ctx.source.cognitoUser)
+#end
+## [End] Parse owner field auth for Get. **

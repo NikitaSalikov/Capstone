@@ -1,0 +1,151 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-viewlive2-dev-102200-authRole",
+      "UnauthRoleArn": "arn:aws:iam::649676779013:role/amplify-viewlive2-dev-102200-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::649676779013:role/amplify-viewlive2-dev-102200-authRole",
+      "Region": "ca-central-1",
+      "DeploymentBucketName": "amplify-viewlive2-dev-102200-deployment",
+      "UnauthRoleName": "amplify-viewlive2-dev-102200-unauthRole",
+      "StackName": "amplify-viewlive2-dev-102200",
+      "StackId": "arn:aws:cloudformation:ca-central-1:649676779013:stack/amplify-viewlive2-dev-102200/17dc2360-e446-11ed-ac3b-0e7fbd608bfe",
+      "AmplifyAppId": "d31fb2nmmf999b"
+    }
+  },
+  "api": {
+    "viewlive2": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "viewlive2"
+        }
+      ],
+      "output": {
+        "authConfig": {
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AWS_IAM"
+            },
+            {
+              "authenticationType": "API_KEY",
+              "apiKeyConfig": {
+                "apiKeyExpirationDays": 30,
+                "description": "api key description"
+              }
+            }
+          ],
+          "defaultAuthentication": {
+            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+            "userPoolConfig": {
+              "userPoolId": "authviewlive2"
+            }
+          }
+        },
+        "GraphQLAPIIdOutput": "fxfl3n73qjhh7bapxc6fo7vn2i",
+        "GraphQLAPIEndpointOutput": "https://st6igqarc5atblo7au4rn7nfcu.appsync-api.ca-central-1.amazonaws.com/graphql",
+        "GraphQLAPIKeyOutput": "da2-5mxofzcc5nfonos7gz7s2iu6tq"
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync",
+      "lastPushTimeStamp": "2024-02-02T01:43:55.633Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-viewlive2-dev-102200-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+        "logicalId": "apiviewlive2"
+      },
+      "lastPushDirHash": "r4AWuLLC75TcSJz9GuxrRPcy2vU="
+    }
+  },
+  "auth": {
+    "viewlive2": {
+      "customAuth": false,
+      "dependsOn": [],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OPTIONAL",
+        "mfaTypes": [
+          "SMS",
+          "TOTP"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyMinLength": 8,
+          "passwordPolicyCharacters": [
+            "REQUIRES_LOWERCASE",
+            "REQUIRES_NUMBERS",
+            "REQUIRES_SYMBOLS",
+            "REQUIRES_UPPERCASE"
+          ]
+        },
+        "signupAttributes": [
+          "FAMILY_NAME",
+          "GIVEN_NAME",
+          "PHONE_NUMBER"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [
+          "EMAIL"
+        ],
+        "verificationMechanisms": [
+          "PHONE_NUMBER"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito",
+      "output": {
+        "CreatedSNSRole": "arn:aws:iam::649676779013:role/sns42dbeb01102200-dev",
+        "UserPoolId": "ca-central-1_xSkiGtAFs",
+        "AppClientIDWeb": "668n62rmqr3jkge85janmshvpj",
+        "AppClientID": "4vo7sa4a47jauvep71f0an24k6",
+        "IdentityPoolId": "ca-central-1:8efbb198-c179-4081-ad29-94c6aad1fd40",
+        "UserPoolArn": "arn:aws:cognito-idp:ca-central-1:649676779013:userpool/ca-central-1_xSkiGtAFs",
+        "IdentityPoolName": "testAuthIdentityPool__dev",
+        "UserPoolName": "viewlive2"
+      },
+      "lastPushTimeStamp": "2024-02-02T01:43:55.445Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-viewlive2-dev-102200-deployment/amplify-cfn-templates/auth/viewlive2-cloudformation-template.json",
+        "logicalId": "authviewlive2"
+      }
+    }
+  },
+  "function": {
+    "graphQlLambdaAuthorizerafa62654": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::649676779013:role/viewlive2LambdaRole7b141aa8-dev",
+        "Region": "ca-central-1",
+        "Arn": "arn:aws:lambda:ca-central-1:649676779013:function:graphQlLambdaAuthorizerafa62654-dev",
+        "Name": "graphQlLambdaAuthorizerafa62654-dev",
+        "LambdaExecutionRole": "viewlive2LambdaRole7b141aa8-dev"
+      },
+      "lastPushTimeStamp": "2024-02-02T01:43:55.447Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-viewlive2-dev-102200-deployment/amplify-cfn-templates/function/graphQlLambdaAuthorizerafa62654-cloudformation-template.json",
+        "logicalId": "functiongraphQlLambdaAuthorizerafa62654"
+      },
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-viewlive2-dev-102200-deployment",
+        "s3Key": "amplify-builds/graphQlLambdaAuthorizerafa62654-634b475864627a774d39-build.zip"
+      }
+    }
+  },
+  "storage": {
+    "s3viewlive2storage2d9b46fd": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3",
+      "output": {
+        "BucketName": "viewlive2-storage-2d9b46fd102200-dev",
+        "Region": "ca-central-1"
+      },
+      "lastPushTimeStamp": "2024-02-02T01:43:55.449Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-viewlive2-dev-102200-deployment/amplify-cfn-templates/storage/cloudformation-template.json",
+        "logicalId": "storages3viewlive2storage2d9b46fd"
+      }
+    }
+  }
+}

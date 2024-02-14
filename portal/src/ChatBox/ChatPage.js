@@ -104,7 +104,6 @@ function ChatPage({ user, signOut }) {
             </li>
           </ul>
         </div>
-
         {activeChat && (
         <MessageContainer
           chatGroup={activeChat}

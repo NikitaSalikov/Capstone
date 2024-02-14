@@ -5,3 +5,4 @@ portal/src/graphql
 portal/package.json
 portal/package-lock.json
 portal/src/ui-components
+node_modules

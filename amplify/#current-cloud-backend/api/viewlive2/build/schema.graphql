@@ -1,0 +1,1008 @@
+type ChatGroup @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  userID: String!
+  locationID: String!
+  ChatMessages(filter: ModelChatMessageFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelChatMessageConnection
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type ChatMessage @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  senderID: ID!
+  receiverID: ID!
+  data: String
+  timeStamp: AWSTimestamp
+  isFile: Boolean
+  chatgroupID: ID!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Keywords @aws_api_key @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  keyword: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Social @aws_api_key @aws_iam @aws_cognito_user_pools {
+  type: String
+  address: String
+}
+
+type LiveSnap @aws_api_key @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  video: String
+  expirationUnixTime: AWSTimestamp
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  owner: String
+}
+
+enum Status {
+  WAITING
+  REJECTED
+  APPROVED
+}
+
+type Story {
+  story: AWSURL
+  PostDate: AWSDateTime
+}
+
+type LocationImage @aws_api_key @aws_iam @aws_cognito_user_pools {
+  type: String!
+  key: String!
+}
+
+type Address @aws_api_key @aws_iam @aws_cognito_user_pools {
+  address: String!
+  unit: String
+  city: String!
+  country: String!
+  state: String!
+  postalcode: String!
+  geoLocation: Coordinates!
+}
+
+type LocationHours @aws_api_key @aws_iam @aws_cognito_user_pools {
+  open: Boolean!
+  startTime: String
+  endTime: String
+  name: String!
+}
+
+type User @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  gender: String
+  dob: AWSDate
+  interests: [String!]!
+  cognitoUser: ID!
+  givenName: String
+  familyName: String
+  myFavourites: [ID]
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  owner: String
+}
+
+type BusinessDocument @aws_iam @aws_cognito_user_pools {
+  document: String!
+  documentType: String!
+}
+
+type Amenitie @aws_api_key @aws_iam @aws_cognito_user_pools {
+  value: String!
+  label: String!
+  icon: String!
+}
+
+type Review @aws_api_key @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  description: String!
+  flag: String
+  locationID: ID!
+  rating: Float!
+  ownerName: String!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  owner: String
+}
+
+type Coordinates @aws_api_key @aws_iam @aws_cognito_user_pools {
+  lat: Float!
+  lng: Float!
+}
+
+type Location @aws_api_key @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  amenities: [Amenitie!]!
+  address: Address!
+  name: String!
+  category: String!
+  businessID: ID!
+  description: String!
+  email: AWSEmail!
+  hours: [LocationHours!]!
+  images: [LocationImage!]
+  phoneNumber: AWSPhone!
+  liveView: String
+  status: Status!
+  Reviews(filter: ModelReviewFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelReviewConnection
+  LiveSnap: LiveSnap
+  latitude: Float!
+  longitude: Float!
+  keywords: [String!]!
+  locationImage: String!
+  isPublished: Boolean!
+  social: [Social]
+  searchField: String
+  avgRating: Float
+  websiteURL: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  locationLiveSnapId: ID
+  owner: String
+}
+
+type Business @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  description: String!
+  address: Address!
+  name: String!
+  number: Int!
+  phone: AWSPhone!
+  size: String!
+  type: String!
+  websiteUrl: AWSURL
+  createdDate: AWSDateTime!
+  status: Status!
+  cognitoUser: ID!
+  Locations(filter: ModelLocationFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelLocationConnection
+  documents: [BusinessDocument!]!
+  identityId: String!
+  email: AWSEmail!
+  searchField: String!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+input ModelStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelBooleanInput {
+  ne: Boolean
+  eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelSubscriptionStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  in: [String]
+  notIn: [String]
+}
+
+input ModelSubscriptionIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  in: [Int]
+  notIn: [Int]
+}
+
+input ModelSubscriptionFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  in: [Float]
+  notIn: [Float]
+}
+
+input ModelSubscriptionBooleanInput {
+  ne: Boolean
+  eq: Boolean
+}
+
+input ModelSubscriptionIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  in: [ID]
+  notIn: [ID]
+}
+
+enum ModelAttributeTypes {
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
+}
+
+input ModelSizeInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+type ModelChatGroupConnection @aws_iam @aws_cognito_user_pools {
+  items: [ChatGroup]!
+  nextToken: String
+}
+
+input ModelChatGroupFilterInput {
+  id: ModelIDInput
+  userID: ModelStringInput
+  locationID: ModelStringInput
+  and: [ModelChatGroupFilterInput]
+  or: [ModelChatGroupFilterInput]
+  not: ModelChatGroupFilterInput
+}
+
+type Query {
+  getChatGroup(id: ID!): ChatGroup @aws_iam @aws_cognito_user_pools
+  listChatGroups(filter: ModelChatGroupFilterInput, limit: Int, nextToken: String): ModelChatGroupConnection @aws_iam @aws_cognito_user_pools
+  getChatMessage(id: ID!): ChatMessage @aws_iam @aws_cognito_user_pools
+  listChatMessages(filter: ModelChatMessageFilterInput, limit: Int, nextToken: String): ModelChatMessageConnection @aws_iam @aws_cognito_user_pools
+  chatMessagesByChatgroupID(chatgroupID: ID!, sortDirection: ModelSortDirection, filter: ModelChatMessageFilterInput, limit: Int, nextToken: String): ModelChatMessageConnection @aws_iam @aws_cognito_user_pools
+  getKeywords(id: ID!): Keywords @aws_api_key @aws_iam @aws_cognito_user_pools
+  listKeywords(filter: ModelKeywordsFilterInput, limit: Int, nextToken: String): ModelKeywordsConnection @aws_api_key @aws_iam @aws_cognito_user_pools
+  getLiveSnap(id: ID!): LiveSnap @aws_api_key @aws_iam @aws_cognito_user_pools
+  listLiveSnaps(filter: ModelLiveSnapFilterInput, limit: Int, nextToken: String): ModelLiveSnapConnection @aws_api_key @aws_iam @aws_cognito_user_pools
+  getUser(id: ID!): User @aws_iam @aws_cognito_user_pools
+  listUsers(filter: ModelUserFilterInput, limit: Int, nextToken: String): ModelUserConnection @aws_iam @aws_cognito_user_pools
+  getReview(id: ID!): Review @aws_api_key @aws_iam @aws_cognito_user_pools
+  listReviews(filter: ModelReviewFilterInput, limit: Int, nextToken: String): ModelReviewConnection @aws_api_key @aws_iam @aws_cognito_user_pools
+  reviewsByLocationID(locationID: ID!, sortDirection: ModelSortDirection, filter: ModelReviewFilterInput, limit: Int, nextToken: String): ModelReviewConnection @aws_api_key @aws_iam @aws_cognito_user_pools
+  getLocation(id: ID!): Location @aws_api_key @aws_iam @aws_cognito_user_pools
+  listLocations(filter: ModelLocationFilterInput, limit: Int, nextToken: String): ModelLocationConnection @aws_api_key @aws_iam @aws_cognito_user_pools
+  locationsByBusinessID(businessID: ID!, sortDirection: ModelSortDirection, filter: ModelLocationFilterInput, limit: Int, nextToken: String): ModelLocationConnection @aws_api_key @aws_iam @aws_cognito_user_pools
+  getBusiness(id: ID!): Business @aws_iam @aws_cognito_user_pools
+  listBusinesses(filter: ModelBusinessFilterInput, limit: Int, nextToken: String): ModelBusinessConnection @aws_iam @aws_cognito_user_pools
+}
+
+input ModelChatGroupConditionInput {
+  userID: ModelStringInput
+  locationID: ModelStringInput
+  and: [ModelChatGroupConditionInput]
+  or: [ModelChatGroupConditionInput]
+  not: ModelChatGroupConditionInput
+}
+
+input CreateChatGroupInput {
+  id: ID
+  userID: String!
+  locationID: String!
+}
+
+input UpdateChatGroupInput {
+  id: ID!
+  userID: String
+  locationID: String
+}
+
+input DeleteChatGroupInput {
+  id: ID!
+}
+
+type Mutation {
+  createChatGroup(input: CreateChatGroupInput!, condition: ModelChatGroupConditionInput): ChatGroup @aws_iam @aws_cognito_user_pools
+  updateChatGroup(input: UpdateChatGroupInput!, condition: ModelChatGroupConditionInput): ChatGroup @aws_iam @aws_cognito_user_pools
+  deleteChatGroup(input: DeleteChatGroupInput!, condition: ModelChatGroupConditionInput): ChatGroup @aws_iam @aws_cognito_user_pools
+  createChatMessage(input: CreateChatMessageInput!, condition: ModelChatMessageConditionInput): ChatMessage @aws_iam @aws_cognito_user_pools
+  updateChatMessage(input: UpdateChatMessageInput!, condition: ModelChatMessageConditionInput): ChatMessage @aws_iam @aws_cognito_user_pools
+  deleteChatMessage(input: DeleteChatMessageInput!, condition: ModelChatMessageConditionInput): ChatMessage @aws_iam @aws_cognito_user_pools
+  createKeywords(input: CreateKeywordsInput!, condition: ModelKeywordsConditionInput): Keywords @aws_iam @aws_cognito_user_pools
+  updateKeywords(input: UpdateKeywordsInput!, condition: ModelKeywordsConditionInput): Keywords @aws_iam @aws_cognito_user_pools
+  deleteKeywords(input: DeleteKeywordsInput!, condition: ModelKeywordsConditionInput): Keywords @aws_iam @aws_cognito_user_pools
+  createLiveSnap(input: CreateLiveSnapInput!, condition: ModelLiveSnapConditionInput): LiveSnap @aws_iam @aws_cognito_user_pools
+  updateLiveSnap(input: UpdateLiveSnapInput!, condition: ModelLiveSnapConditionInput): LiveSnap @aws_iam @aws_cognito_user_pools
+  deleteLiveSnap(input: DeleteLiveSnapInput!, condition: ModelLiveSnapConditionInput): LiveSnap @aws_iam @aws_cognito_user_pools
+  createUser(input: CreateUserInput!, condition: ModelUserConditionInput): User @aws_iam @aws_cognito_user_pools
+  updateUser(input: UpdateUserInput!, condition: ModelUserConditionInput): User @aws_iam @aws_cognito_user_pools
+  deleteUser(input: DeleteUserInput!, condition: ModelUserConditionInput): User @aws_iam @aws_cognito_user_pools
+  createReview(input: CreateReviewInput!, condition: ModelReviewConditionInput): Review @aws_iam @aws_cognito_user_pools
+  updateReview(input: UpdateReviewInput!, condition: ModelReviewConditionInput): Review @aws_iam @aws_cognito_user_pools
+  deleteReview(input: DeleteReviewInput!, condition: ModelReviewConditionInput): Review @aws_iam @aws_cognito_user_pools
+  createLocation(input: CreateLocationInput!, condition: ModelLocationConditionInput): Location @aws_iam @aws_cognito_user_pools
+  updateLocation(input: UpdateLocationInput!, condition: ModelLocationConditionInput): Location @aws_iam @aws_cognito_user_pools
+  deleteLocation(input: DeleteLocationInput!, condition: ModelLocationConditionInput): Location @aws_iam @aws_cognito_user_pools
+  createBusiness(input: CreateBusinessInput!, condition: ModelBusinessConditionInput): Business @aws_iam @aws_cognito_user_pools
+  updateBusiness(input: UpdateBusinessInput!, condition: ModelBusinessConditionInput): Business @aws_iam @aws_cognito_user_pools
+  deleteBusiness(input: DeleteBusinessInput!, condition: ModelBusinessConditionInput): Business @aws_iam @aws_cognito_user_pools
+}
+
+input ModelSubscriptionChatGroupFilterInput {
+  id: ModelSubscriptionIDInput
+  userID: ModelSubscriptionStringInput
+  locationID: ModelSubscriptionStringInput
+  and: [ModelSubscriptionChatGroupFilterInput]
+  or: [ModelSubscriptionChatGroupFilterInput]
+}
+
+type Subscription {
+  onCreateChatGroup(filter: ModelSubscriptionChatGroupFilterInput): ChatGroup @aws_subscribe(mutations: ["createChatGroup"]) @aws_iam @aws_cognito_user_pools
+  onUpdateChatGroup(filter: ModelSubscriptionChatGroupFilterInput): ChatGroup @aws_subscribe(mutations: ["updateChatGroup"]) @aws_iam @aws_cognito_user_pools
+  onDeleteChatGroup(filter: ModelSubscriptionChatGroupFilterInput): ChatGroup @aws_subscribe(mutations: ["deleteChatGroup"]) @aws_iam @aws_cognito_user_pools
+  onCreateChatMessage(filter: ModelSubscriptionChatMessageFilterInput): ChatMessage @aws_subscribe(mutations: ["createChatMessage"]) @aws_iam @aws_cognito_user_pools
+  onUpdateChatMessage(filter: ModelSubscriptionChatMessageFilterInput): ChatMessage @aws_subscribe(mutations: ["updateChatMessage"]) @aws_iam @aws_cognito_user_pools
+  onDeleteChatMessage(filter: ModelSubscriptionChatMessageFilterInput): ChatMessage @aws_subscribe(mutations: ["deleteChatMessage"]) @aws_iam @aws_cognito_user_pools
+  onCreateKeywords(filter: ModelSubscriptionKeywordsFilterInput): Keywords @aws_subscribe(mutations: ["createKeywords"]) @aws_api_key @aws_iam @aws_cognito_user_pools
+  onUpdateKeywords(filter: ModelSubscriptionKeywordsFilterInput): Keywords @aws_subscribe(mutations: ["updateKeywords"]) @aws_api_key @aws_iam @aws_cognito_user_pools
+  onDeleteKeywords(filter: ModelSubscriptionKeywordsFilterInput): Keywords @aws_subscribe(mutations: ["deleteKeywords"]) @aws_api_key @aws_iam @aws_cognito_user_pools
+  onCreateLiveSnap(filter: ModelSubscriptionLiveSnapFilterInput, owner: String): LiveSnap @aws_subscribe(mutations: ["createLiveSnap"]) @aws_api_key @aws_iam @aws_cognito_user_pools
+  onUpdateLiveSnap(filter: ModelSubscriptionLiveSnapFilterInput, owner: String): LiveSnap @aws_subscribe(mutations: ["updateLiveSnap"]) @aws_api_key @aws_iam @aws_cognito_user_pools
+  onDeleteLiveSnap(filter: ModelSubscriptionLiveSnapFilterInput, owner: String): LiveSnap @aws_subscribe(mutations: ["deleteLiveSnap"]) @aws_api_key @aws_iam @aws_cognito_user_pools
+  onCreateUser(filter: ModelSubscriptionUserFilterInput, owner: String): User @aws_subscribe(mutations: ["createUser"]) @aws_iam @aws_cognito_user_pools
+  onUpdateUser(filter: ModelSubscriptionUserFilterInput, owner: String): User @aws_subscribe(mutations: ["updateUser"]) @aws_iam @aws_cognito_user_pools
+  onDeleteUser(filter: ModelSubscriptionUserFilterInput, owner: String): User @aws_subscribe(mutations: ["deleteUser"]) @aws_iam @aws_cognito_user_pools
+  onCreateReview(filter: ModelSubscriptionReviewFilterInput, owner: String): Review @aws_subscribe(mutations: ["createReview"]) @aws_api_key @aws_iam @aws_cognito_user_pools
+  onUpdateReview(filter: ModelSubscriptionReviewFilterInput, owner: String): Review @aws_subscribe(mutations: ["updateReview"]) @aws_api_key @aws_iam @aws_cognito_user_pools
+  onDeleteReview(filter: ModelSubscriptionReviewFilterInput, owner: String): Review @aws_subscribe(mutations: ["deleteReview"]) @aws_api_key @aws_iam @aws_cognito_user_pools
+  onCreateLocation(filter: ModelSubscriptionLocationFilterInput, owner: String): Location @aws_subscribe(mutations: ["createLocation"]) @aws_api_key @aws_iam @aws_cognito_user_pools
+  onUpdateLocation(filter: ModelSubscriptionLocationFilterInput, owner: String): Location @aws_subscribe(mutations: ["updateLocation"]) @aws_api_key @aws_iam @aws_cognito_user_pools
+  onDeleteLocation(filter: ModelSubscriptionLocationFilterInput, owner: String): Location @aws_subscribe(mutations: ["deleteLocation"]) @aws_api_key @aws_iam @aws_cognito_user_pools
+  onCreateBusiness(filter: ModelSubscriptionBusinessFilterInput, cognitoUser: String): Business @aws_subscribe(mutations: ["createBusiness"]) @aws_iam @aws_cognito_user_pools
+  onUpdateBusiness(filter: ModelSubscriptionBusinessFilterInput, cognitoUser: String): Business @aws_subscribe(mutations: ["updateBusiness"]) @aws_iam @aws_cognito_user_pools
+  onDeleteBusiness(filter: ModelSubscriptionBusinessFilterInput, cognitoUser: String): Business @aws_subscribe(mutations: ["deleteBusiness"]) @aws_iam @aws_cognito_user_pools
+}
+
+type ModelChatMessageConnection @aws_iam @aws_cognito_user_pools {
+  items: [ChatMessage]!
+  nextToken: String
+}
+
+input ModelChatMessageFilterInput {
+  id: ModelIDInput
+  senderID: ModelIDInput
+  receiverID: ModelIDInput
+  data: ModelStringInput
+  timeStamp: ModelIntInput
+  isFile: ModelBooleanInput
+  chatgroupID: ModelIDInput
+  and: [ModelChatMessageFilterInput]
+  or: [ModelChatMessageFilterInput]
+  not: ModelChatMessageFilterInput
+}
+
+input ModelChatMessageConditionInput {
+  senderID: ModelIDInput
+  receiverID: ModelIDInput
+  data: ModelStringInput
+  timeStamp: ModelIntInput
+  isFile: ModelBooleanInput
+  chatgroupID: ModelIDInput
+  and: [ModelChatMessageConditionInput]
+  or: [ModelChatMessageConditionInput]
+  not: ModelChatMessageConditionInput
+}
+
+input CreateChatMessageInput {
+  id: ID
+  senderID: ID!
+  receiverID: ID!
+  data: String
+  timeStamp: AWSTimestamp
+  isFile: Boolean
+  chatgroupID: ID!
+}
+
+input UpdateChatMessageInput {
+  id: ID!
+  senderID: ID
+  receiverID: ID
+  data: String
+  timeStamp: AWSTimestamp
+  isFile: Boolean
+  chatgroupID: ID
+}
+
+input DeleteChatMessageInput {
+  id: ID!
+}
+
+input ModelSubscriptionChatMessageFilterInput {
+  id: ModelSubscriptionIDInput
+  senderID: ModelSubscriptionIDInput
+  receiverID: ModelSubscriptionIDInput
+  data: ModelSubscriptionStringInput
+  timeStamp: ModelSubscriptionIntInput
+  isFile: ModelSubscriptionBooleanInput
+  chatgroupID: ModelSubscriptionIDInput
+  and: [ModelSubscriptionChatMessageFilterInput]
+  or: [ModelSubscriptionChatMessageFilterInput]
+}
+
+type ModelKeywordsConnection @aws_api_key @aws_iam @aws_cognito_user_pools {
+  items: [Keywords]!
+  nextToken: String
+}
+
+input ModelKeywordsFilterInput {
+  id: ModelIDInput
+  keyword: ModelStringInput
+  and: [ModelKeywordsFilterInput]
+  or: [ModelKeywordsFilterInput]
+  not: ModelKeywordsFilterInput
+}
+
+input ModelKeywordsConditionInput {
+  keyword: ModelStringInput
+  and: [ModelKeywordsConditionInput]
+  or: [ModelKeywordsConditionInput]
+  not: ModelKeywordsConditionInput
+}
+
+input CreateKeywordsInput {
+  id: ID
+  keyword: String
+}
+
+input UpdateKeywordsInput {
+  id: ID!
+  keyword: String
+}
+
+input DeleteKeywordsInput {
+  id: ID!
+}
+
+input ModelSubscriptionKeywordsFilterInput {
+  id: ModelSubscriptionIDInput
+  keyword: ModelSubscriptionStringInput
+  and: [ModelSubscriptionKeywordsFilterInput]
+  or: [ModelSubscriptionKeywordsFilterInput]
+}
+
+type ModelLiveSnapConnection @aws_api_key @aws_iam @aws_cognito_user_pools {
+  items: [LiveSnap]!
+  nextToken: String
+}
+
+input ModelLiveSnapFilterInput {
+  id: ModelIDInput
+  video: ModelStringInput
+  expirationUnixTime: ModelIntInput
+  and: [ModelLiveSnapFilterInput]
+  or: [ModelLiveSnapFilterInput]
+  not: ModelLiveSnapFilterInput
+}
+
+input ModelLiveSnapConditionInput {
+  video: ModelStringInput
+  expirationUnixTime: ModelIntInput
+  and: [ModelLiveSnapConditionInput]
+  or: [ModelLiveSnapConditionInput]
+  not: ModelLiveSnapConditionInput
+}
+
+input CreateLiveSnapInput {
+  id: ID
+  video: String
+  expirationUnixTime: AWSTimestamp
+}
+
+input UpdateLiveSnapInput {
+  id: ID!
+  video: String
+  expirationUnixTime: AWSTimestamp
+}
+
+input DeleteLiveSnapInput {
+  id: ID!
+}
+
+input ModelSubscriptionLiveSnapFilterInput {
+  id: ModelSubscriptionIDInput
+  video: ModelSubscriptionStringInput
+  expirationUnixTime: ModelSubscriptionIntInput
+  and: [ModelSubscriptionLiveSnapFilterInput]
+  or: [ModelSubscriptionLiveSnapFilterInput]
+}
+
+type ModelUserConnection @aws_iam @aws_cognito_user_pools {
+  items: [User]!
+  nextToken: String
+}
+
+input ModelUserFilterInput {
+  id: ModelIDInput
+  gender: ModelStringInput
+  dob: ModelStringInput
+  interests: ModelStringInput
+  cognitoUser: ModelIDInput
+  givenName: ModelStringInput
+  familyName: ModelStringInput
+  myFavourites: ModelIDInput
+  and: [ModelUserFilterInput]
+  or: [ModelUserFilterInput]
+  not: ModelUserFilterInput
+}
+
+input ModelUserConditionInput {
+  gender: ModelStringInput
+  dob: ModelStringInput
+  interests: ModelStringInput
+  cognitoUser: ModelIDInput
+  givenName: ModelStringInput
+  familyName: ModelStringInput
+  myFavourites: ModelIDInput
+  and: [ModelUserConditionInput]
+  or: [ModelUserConditionInput]
+  not: ModelUserConditionInput
+}
+
+input CreateUserInput {
+  id: ID
+  gender: String
+  dob: AWSDate
+  interests: [String!]!
+  cognitoUser: ID!
+  givenName: String
+  familyName: String
+  myFavourites: [ID]
+}
+
+input UpdateUserInput {
+  id: ID!
+  gender: String
+  dob: AWSDate
+  interests: [String!]
+  cognitoUser: ID
+  givenName: String
+  familyName: String
+  myFavourites: [ID]
+}
+
+input DeleteUserInput {
+  id: ID!
+}
+
+input ModelSubscriptionUserFilterInput {
+  id: ModelSubscriptionIDInput
+  gender: ModelSubscriptionStringInput
+  dob: ModelSubscriptionStringInput
+  interests: ModelSubscriptionStringInput
+  cognitoUser: ModelSubscriptionIDInput
+  givenName: ModelSubscriptionStringInput
+  familyName: ModelSubscriptionStringInput
+  myFavourites: ModelSubscriptionIDInput
+  and: [ModelSubscriptionUserFilterInput]
+  or: [ModelSubscriptionUserFilterInput]
+}
+
+type ModelReviewConnection @aws_api_key @aws_iam @aws_cognito_user_pools {
+  items: [Review]!
+  nextToken: String
+}
+
+input ModelReviewFilterInput {
+  id: ModelIDInput
+  description: ModelStringInput
+  flag: ModelStringInput
+  locationID: ModelIDInput
+  rating: ModelFloatInput
+  ownerName: ModelStringInput
+  and: [ModelReviewFilterInput]
+  or: [ModelReviewFilterInput]
+  not: ModelReviewFilterInput
+}
+
+input ModelReviewConditionInput {
+  description: ModelStringInput
+  flag: ModelStringInput
+  locationID: ModelIDInput
+  rating: ModelFloatInput
+  ownerName: ModelStringInput
+  and: [ModelReviewConditionInput]
+  or: [ModelReviewConditionInput]
+  not: ModelReviewConditionInput
+}
+
+input CreateReviewInput {
+  id: ID
+  description: String!
+  flag: String
+  locationID: ID!
+  rating: Float!
+  ownerName: String!
+}
+
+input UpdateReviewInput {
+  id: ID!
+  description: String
+  flag: String
+  locationID: ID
+  rating: Float
+  ownerName: String
+}
+
+input DeleteReviewInput {
+  id: ID!
+}
+
+input ModelSubscriptionReviewFilterInput {
+  id: ModelSubscriptionIDInput
+  description: ModelSubscriptionStringInput
+  flag: ModelSubscriptionStringInput
+  locationID: ModelSubscriptionIDInput
+  rating: ModelSubscriptionFloatInput
+  ownerName: ModelSubscriptionStringInput
+  and: [ModelSubscriptionReviewFilterInput]
+  or: [ModelSubscriptionReviewFilterInput]
+}
+
+input AmenitieInput {
+  value: String!
+  label: String!
+  icon: String!
+}
+
+input AddressInput {
+  address: String!
+  unit: String
+  city: String!
+  country: String!
+  state: String!
+  postalcode: String!
+  geoLocation: CoordinatesInput!
+}
+
+input CoordinatesInput {
+  lat: Float!
+  lng: Float!
+}
+
+input LocationHoursInput {
+  open: Boolean!
+  startTime: String
+  endTime: String
+  name: String!
+}
+
+input LocationImageInput {
+  type: String!
+  key: String!
+}
+
+input SocialInput {
+  type: String
+  address: String
+}
+
+type ModelLocationConnection @aws_api_key @aws_iam @aws_cognito_user_pools {
+  items: [Location]!
+  nextToken: String
+}
+
+input ModelStatusInput {
+  eq: Status
+  ne: Status
+}
+
+input ModelLocationFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  category: ModelStringInput
+  businessID: ModelIDInput
+  description: ModelStringInput
+  email: ModelStringInput
+  phoneNumber: ModelStringInput
+  liveView: ModelStringInput
+  status: ModelStatusInput
+  latitude: ModelFloatInput
+  longitude: ModelFloatInput
+  keywords: ModelStringInput
+  locationImage: ModelStringInput
+  isPublished: ModelBooleanInput
+  searchField: ModelStringInput
+  avgRating: ModelFloatInput
+  websiteURL: ModelStringInput
+  and: [ModelLocationFilterInput]
+  or: [ModelLocationFilterInput]
+  not: ModelLocationFilterInput
+  locationLiveSnapId: ModelIDInput
+}
+
+input ModelLocationConditionInput {
+  name: ModelStringInput
+  category: ModelStringInput
+  businessID: ModelIDInput
+  description: ModelStringInput
+  email: ModelStringInput
+  phoneNumber: ModelStringInput
+  liveView: ModelStringInput
+  status: ModelStatusInput
+  latitude: ModelFloatInput
+  longitude: ModelFloatInput
+  keywords: ModelStringInput
+  locationImage: ModelStringInput
+  isPublished: ModelBooleanInput
+  searchField: ModelStringInput
+  avgRating: ModelFloatInput
+  websiteURL: ModelStringInput
+  and: [ModelLocationConditionInput]
+  or: [ModelLocationConditionInput]
+  not: ModelLocationConditionInput
+  locationLiveSnapId: ModelIDInput
+}
+
+input CreateLocationInput {
+  id: ID
+  amenities: [AmenitieInput!]!
+  address: AddressInput!
+  name: String!
+  category: String!
+  businessID: ID!
+  description: String!
+  email: AWSEmail!
+  hours: [LocationHoursInput!]!
+  images: [LocationImageInput!]
+  phoneNumber: AWSPhone!
+  liveView: String
+  status: Status!
+  latitude: Float!
+  longitude: Float!
+  keywords: [String!]!
+  locationImage: String!
+  isPublished: Boolean!
+  social: [SocialInput]
+  searchField: String
+  avgRating: Float
+  websiteURL: String
+  locationLiveSnapId: ID
+}
+
+input UpdateLocationInput {
+  id: ID!
+  amenities: [AmenitieInput!]
+  address: AddressInput
+  name: String
+  category: String
+  businessID: ID
+  description: String
+  email: AWSEmail
+  hours: [LocationHoursInput!]
+  images: [LocationImageInput!]
+  phoneNumber: AWSPhone
+  liveView: String
+  status: Status
+  latitude: Float
+  longitude: Float
+  keywords: [String!]
+  locationImage: String
+  isPublished: Boolean
+  social: [SocialInput]
+  searchField: String
+  avgRating: Float
+  websiteURL: String
+  locationLiveSnapId: ID
+}
+
+input DeleteLocationInput {
+  id: ID!
+}
+
+input ModelSubscriptionLocationFilterInput {
+  id: ModelSubscriptionIDInput
+  name: ModelSubscriptionStringInput
+  category: ModelSubscriptionStringInput
+  businessID: ModelSubscriptionIDInput
+  description: ModelSubscriptionStringInput
+  email: ModelSubscriptionStringInput
+  phoneNumber: ModelSubscriptionStringInput
+  liveView: ModelSubscriptionStringInput
+  status: ModelSubscriptionStringInput
+  latitude: ModelSubscriptionFloatInput
+  longitude: ModelSubscriptionFloatInput
+  keywords: ModelSubscriptionStringInput
+  locationImage: ModelSubscriptionStringInput
+  isPublished: ModelSubscriptionBooleanInput
+  searchField: ModelSubscriptionStringInput
+  avgRating: ModelSubscriptionFloatInput
+  websiteURL: ModelSubscriptionStringInput
+  and: [ModelSubscriptionLocationFilterInput]
+  or: [ModelSubscriptionLocationFilterInput]
+}
+
+input BusinessDocumentInput {
+  document: String!
+  documentType: String!
+}
+
+type ModelBusinessConnection @aws_iam @aws_cognito_user_pools {
+  items: [Business]!
+  nextToken: String
+}
+
+input ModelBusinessFilterInput {
+  id: ModelIDInput
+  description: ModelStringInput
+  name: ModelStringInput
+  number: ModelIntInput
+  phone: ModelStringInput
+  size: ModelStringInput
+  type: ModelStringInput
+  websiteUrl: ModelStringInput
+  createdDate: ModelStringInput
+  status: ModelStatusInput
+  cognitoUser: ModelIDInput
+  identityId: ModelStringInput
+  email: ModelStringInput
+  searchField: ModelStringInput
+  and: [ModelBusinessFilterInput]
+  or: [ModelBusinessFilterInput]
+  not: ModelBusinessFilterInput
+}
+
+input ModelBusinessConditionInput {
+  description: ModelStringInput
+  name: ModelStringInput
+  number: ModelIntInput
+  phone: ModelStringInput
+  size: ModelStringInput
+  type: ModelStringInput
+  websiteUrl: ModelStringInput
+  createdDate: ModelStringInput
+  status: ModelStatusInput
+  cognitoUser: ModelIDInput
+  identityId: ModelStringInput
+  email: ModelStringInput
+  searchField: ModelStringInput
+  and: [ModelBusinessConditionInput]
+  or: [ModelBusinessConditionInput]
+  not: ModelBusinessConditionInput
+}
+
+input CreateBusinessInput {
+  id: ID
+  description: String!
+  address: AddressInput!
+  name: String!
+  number: Int!
+  phone: AWSPhone!
+  size: String!
+  type: String!
+  websiteUrl: AWSURL
+  createdDate: AWSDateTime!
+  status: Status!
+  cognitoUser: ID!
+  documents: [BusinessDocumentInput!]!
+  identityId: String!
+  email: AWSEmail!
+  searchField: String!
+}
+
+input UpdateBusinessInput {
+  id: ID!
+  description: String
+  address: AddressInput
+  name: String
+  number: Int
+  phone: AWSPhone
+  size: String
+  type: String
+  websiteUrl: AWSURL
+  createdDate: AWSDateTime
+  status: Status
+  cognitoUser: ID
+  documents: [BusinessDocumentInput!]
+  identityId: String
+  email: AWSEmail
+  searchField: String
+}
+
+input DeleteBusinessInput {
+  id: ID!
+}
+
+input ModelSubscriptionBusinessFilterInput {
+  id: ModelSubscriptionIDInput
+  description: ModelSubscriptionStringInput
+  name: ModelSubscriptionStringInput
+  number: ModelSubscriptionIntInput
+  phone: ModelSubscriptionStringInput
+  size: ModelSubscriptionStringInput
+  type: ModelSubscriptionStringInput
+  websiteUrl: ModelSubscriptionStringInput
+  createdDate: ModelSubscriptionStringInput
+  status: ModelSubscriptionStringInput
+  identityId: ModelSubscriptionStringInput
+  email: ModelSubscriptionStringInput
+  searchField: ModelSubscriptionStringInput
+  and: [ModelSubscriptionBusinessFilterInput]
+  or: [ModelSubscriptionBusinessFilterInput]
+}

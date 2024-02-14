@@ -1,0 +1,14 @@
+{
+    "AppSyncApiName": "viewlive2",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": false,
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authviewlive2",
+            "Outputs.UserPoolId"
+        ]
+    },
+    "AuthModeLastUpdated": "2023-04-28T00:01:27.407Z",
+    "S3DeploymentBucket": "amplify-viewlive2-dev-102200-deployment",
+    "S3DeploymentRootKey": "amplify-appsync-files/d76870f67ae1bc3656f642962863b9d3cc6747e6"
+}
