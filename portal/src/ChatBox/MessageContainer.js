@@ -99,10 +99,11 @@ function MessageContainer({ chatGroup, sender, receiver }) {
             onChange={(e) => setNewMessage(e.target.value)}
           />
           <button name="send" id="send-button" onClick={handleSendMessage}>Send</button>
-
+        {/*
         <form onSubmit={handleSendMessage}>
           
         </form>
+        */}
       </div>
     </div>
   );
