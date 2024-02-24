@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { API } from 'aws-amplify';
+import { API, Storage } from 'aws-amplify';
 import { chatMessagesByChatgroupID } from '../graphql/queries';
 import * as mutations from "../graphql/mutations";
 import intlFormatDistance from "date-fns/intlFormatDistance";
@@ -7,6 +7,26 @@ import intlFormatDistance from "date-fns/intlFormatDistance";
 function MessageContainer({ chatGroup, sender, receiver }) {
   const [chatMessages, setChatMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [fileData, setFileData] = useState();
+
+  const uploadFile = async () => {
+    const result = await Storage.put(fileData.name, fileData, {
+      contentType: fileData.type,
+    });
+    console.log(21, result);
+  };
+
+  async function generateDownloadLink(filekey) {
+    const result = await Storage.get(filekey, { download: true});
+    return downloadBlob(result.Body, "filename");
+  }
+
+  async function downloadBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    return a;
+  }
 
   useEffect(() => {
     // fetching messages
@@ -89,21 +109,32 @@ function MessageContainer({ chatGroup, sender, receiver }) {
       </div>
 
       <div className="chatbox_input">
-        {/* This is a bad example */}
-        <button name="happy-outline">emoji</button>
-        <button name="attach-outline">file</button>
+        <div>
+          <input 
+              style={{marginLeft: -10, marginBottom: -10, width: 100, fontSize: 15}} 
+              type="file" 
+              onChange={(e) => setFileData(e.target.files[0])}/>
+          <button 
+              style={{marginLeft: -10, width: 95, fontSize: 15}}
+              name="attach-outline" 
+              onClick={async function(event){
+                uploadFile();
+              }}>
+                Upload File
+          </button>
+        </div>
         <input
+            style={{marginLeft: 75}}
             type="text"
             placeholder="Type a message"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
           />
           <button name="send" id="send-button" onClick={handleSendMessage}>Send</button>
-        {/*
+
         <form onSubmit={handleSendMessage}>
           
         </form>
-        */}
       </div>
     </div>
   );
