@@ -7,7 +7,8 @@ import intlFormatDistance from "date-fns/intlFormatDistance";
 function MessageContainer({ chatGroup, sender, receiver }) {
   const [chatMessages, setChatMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-  const [fileData, setFileData] = useState();
+  const [fileData, setFileData] = useState('');
+  const [isFile, setIsFile] = useState(false);
 
   const uploadFile = async () => {
     const result = await Storage.put(fileData.name, fileData, {
@@ -56,6 +57,7 @@ function MessageContainer({ chatGroup, sender, receiver }) {
         chatgroupID: chatGroup.id,
         senderID: sender,
         receiverID: receiver,
+        isFile: isFile,
         data: newMessage,
       };
 
@@ -69,6 +71,7 @@ function MessageContainer({ chatGroup, sender, receiver }) {
       // update
       setChatMessages([...chatMessages, newMessageData]);
       setNewMessage('');
+      setIsFile(false);
     } catch (error) {
       console.error('Error sending message:', error);
     }
@@ -91,7 +94,9 @@ function MessageContainer({ chatGroup, sender, receiver }) {
             key={message.id}
           >
             <p>
-              {message.data}
+              <a>
+                {message.data}
+              </a>
               <br />
               <span>
                 <time
@@ -113,18 +118,22 @@ function MessageContainer({ chatGroup, sender, receiver }) {
           <input 
               style={{marginLeft: -10, marginBottom: -10, width: 100, fontSize: 15}} 
               type="file" 
-              onChange={(e) => setFileData(e.target.files[0])}/>
+              onChange={(e) => {
+                setFileData(e.target.files[0]);
+                setNewMessage(e.target.files[0].name);
+                setIsFile(true);
+                }}/>
           <button 
               style={{marginLeft: -10, width: 95, fontSize: 15}}
               name="attach-outline" 
               onClick={async function(event){
                 uploadFile();
+                handleSendMessage(event);
               }}>
                 Upload File
           </button>
         </div>
         <input
-            style={{marginLeft: 75}}
             type="text"
             placeholder="Type a message"
             value={newMessage}
