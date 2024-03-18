@@ -1,3 +1,4 @@
+
 @import url('http://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap');
 *
 {
@@ -15,6 +16,7 @@ body {
     align-items: center;
     min-height: 100vh;
     background: linear-gradient(to bottom, #aaecf7, #e0e6e8);
+    
 }
 
 
@@ -25,6 +27,7 @@ body {
     height: calc(100vh - 40px);
     background-color: #fff;
     display: flex;
+    
 }
 
 .chat-container .leftSide {
@@ -32,14 +35,14 @@ body {
     position: relative;
     flex: 30%;
     background:#fff;
-    border-right: 1px solid #a2a1a1;
+    border-right: 1px solid #a2a1a1;;
 }
 
 .chat-container .rightSide {
     
     position: relative;
     flex: 70%;
-    background: #afb0a8;
+    background: #e6e6d5;
     
 }
 
@@ -72,6 +75,16 @@ body {
     height:100%;
     object-fit: cover;
 }
+.end-chat
+{
+    display: flex;
+    list-style:none;
+    cursor:pointer;
+    margin-left: 12px;
+    font-size: 1.5em;
+    color:#aaa;
+}
+
 
 .nav_icons
 {
@@ -87,7 +100,7 @@ body {
     font-size: 1em;
     margin-left: 12px;
 }
-
+/*
 .search_chat
 {
     position: relative;
@@ -127,11 +140,12 @@ body {
     top:15px;
     font-size: 1.1em;
 }
+*/
 
 .chatlist
 {
     position: relative;
-    height: calc(100% - 110px);
+    height: calc(100% - 60px);
     overflow-y: auto;
     background: #f3f6ee;
 }
@@ -231,11 +245,11 @@ body {
 {
     position: relative;
     width: 100%;
-    height: calc(100% - 120px);
+    max-height: 618px; /* Set max height height: calc(100% - 110px);*/
     padding: 30px;
     overflow-y: auto;
+    
 }
-
 
 .chat-messages {
     position: relative;
@@ -251,7 +265,7 @@ body {
     text-align: right;
     max-width: 65%;
     padding: 12px;
-    background: #dcf8c6;
+    background: #abdff3;
     border-radius: 10px;
     font-size: 0.9em;
 
@@ -268,7 +282,7 @@ body {
     right: -12px;
     width: 20px;
     height: 20px;
-    background: linear-gradient(135deg, #dcf8c6 0%, #dcf8c6 50%, transparent 50%, transparent);
+    background: linear-gradient(135deg, #abdff3 0%, #abdff3 50%, transparent 50%, transparent);
 
 }
 
@@ -304,6 +318,8 @@ body {
     background: linear-gradient(225deg, #fff 0%, #fff 50%, transparent 50%, transparent);
 
 }
+
+  
 .chatbox_input
 {
     position: relative;
@@ -316,14 +332,6 @@ body {
     align-items: center;
     
 }
-.chatbox_input ion-icon
-{
-    cursor: pointer;
-    font-size: 1.5em;
-    color: #51585c;
-   
-}
-
 
 .chatbox_input input
 {
@@ -337,5 +345,79 @@ body {
     height:40px;
 }
 
+.confirmation-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    padding: 20px;
+    text-align: center;
+    z-index: 1000 !important; 
+}
 
 
+
+.confirmation-content {
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.confirmation-buttons {
+    margin-top: 20px;
+}
+
+.confirm-button,
+.cancel-button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.confirm-button {
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+}
+
+.cancel-button {
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+}
+
+.confirm-button:hover,
+.cancel-button:hover {
+    background-color: #8fd5e6;
+    transform: scale(1.05);
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3); /* Adjust opacity as needed */
+    backdrop-filter: blur(2px); /* Apply blur effect */
+    z-index: 999; /* Ensure the overlay is on top of other content */
+    display: none; /* Initially hide the overlay */
+}
+
+.overlay.active {
+    display: block; /* Show the overlay when active */
+}
+
+.click-blocker {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999; /* Higher z-index than the overlay */
+}
