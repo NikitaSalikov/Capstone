@@ -1,12 +1,29 @@
 // MessageComponent.js
 import React from 'react';
 import intlFormatDistance from "date-fns/intlFormatDistance";
+import styled from 'styled-components';
+
+const Button = styled.button`
+  color: blue;
+  border: none;
+  background-color: transparent;
+  &:disabled {
+    color: black;
+    border: none;
+  }
+`;
 
 function MessageComponent({ message, sender }) {
+  //const link = "https://google.com/";
+  const link = 'https://viewlive2-storage-2d9b46fd102200-dev.s3.ca-central-1.amazonaws.com/public/' + message.data;
   return (
     <div className={`chat-messages ${message.senderID === sender ? 'my_message' : 'frnd_message'}`}>
       <p>
-        {message.data}
+        <a href={link}>
+          <Button disabled={message.isFile ? false : true}>
+            {message.data}
+          </Button>
+        </a>
         <br />
         <span>
           <time
