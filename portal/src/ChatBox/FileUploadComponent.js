@@ -1,32 +1,25 @@
 // FileUploadComponent.js
 import React, { useState } from 'react';
-import { Storage } from 'aws-amplify';
-import { FaRegFile } from "react-icons/fa";
+import FileSendComponent from './FileSendComponent';
 
-function FileUploadComponent() {
-  const [fileData, setFileData] = useState();
-
-  const uploadFile = async () => {
-    const result = await Storage.put(fileData.name, fileData, {
-      contentType: fileData.type,
-    });
-    console.log(21, result);
-  };
-
+function FileUploadComponent({sender, receiver, chatGroupId}) {
+  const [fileData, setFileData] = useState('');
+  
   return (
     <div>
       <input
-        style={{ marginLeft: -10, marginBottom: -10, width: 100, fontSize: 15 }}
+        style={{marginLeft: -5, marginRight: -10, fontSize: 13, height: 20}}
         type="file"
-        onChange={(e) => setFileData(e.target.files[0])} />
-      <button
-        style={{ marginLeft: -10, width: 95, fontSize: 15 }}
-        name="attach-outline"
-        onClick={async function (event) {
-          uploadFile();
-        }}>
-        Upload File
-      </button>
+        onChange={(e) => setFileData(e.target.files[0])} 
+        />
+        <FileSendComponent 
+          sender={sender}
+          receiver={receiver}
+          chatGroupId={chatGroupId}
+          fileData={fileData}
+          fileName={fileData.name}
+          fileType={fileData.type}
+        />
     </div>
   );
 }

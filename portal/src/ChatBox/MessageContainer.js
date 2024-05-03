@@ -5,7 +5,7 @@ import * as mutations from "../graphql/mutations";
 import MessageComponent from './MessageComponent';
 import FileUploadComponent from './FileUploadComponent';
 import TextInputComponent from './TextInputComponent';
-import { FaPaperPlane } from 'react-icons/fa';
+import { FaPaperPlane } from "react-icons/fa";
 
 function MessageContainer({ chatGroup, sender, receiver, isBlurActive }) {
   const [chatMessages, setChatMessages] = useState([]);
@@ -68,7 +68,11 @@ function MessageContainer({ chatGroup, sender, receiver, isBlurActive }) {
       </div>
 
       <div className="chatbox_input">
-        <FileUploadComponent />
+        <FileUploadComponent 
+          sender={sender}
+          receiver={receiver}
+          chatGroupId={chatGroup.id}
+        />
 
         <TextInputComponent
           value={newMessage}
