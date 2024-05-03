@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { API } from 'aws-amplify';
 import { chatMessagesByChatgroupID } from '../../graphql/queries';
+import { onCreateChatMessage } from '../../graphql/subscriptions';
 import * as mutations from "../../graphql/mutations";
 import intlFormatDistance from "date-fns/intlFormatDistance";
 
-function MessageContainer({ chatGroup, sender, receiver }) {
+import MessageComponent from '../MessageComponent';
+import FileUploadComponent from './FileUploadComponent';
+import TextInputComponent from '../TextInputComponent';
+import { FaPaperPlane } from 'react-icons/fa';
+
+function MessageContainer({ chatGroup, sender, receiver, isBlurActive }) {
   const [chatMessages, setChatMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
 
   useEffect(() => {
-    // fetching messages
+    // Fetch all the current messages
     async function fetchMessages() {
       try {
         if (chatGroup && chatGroup.id) {
@@ -26,6 +32,24 @@ function MessageContainer({ chatGroup, sender, receiver }) {
       }
     }
     fetchMessages();
+
+    // Gets future chat messages
+    const sub =
+      API.graphql({
+        query: onCreateChatMessage,
+        variables: {
+          filter: {
+            chatgroupID: {eq: chatGroup.id}
+          }
+        }
+      }).subscribe({
+        next: ({provider, value}) => {
+          //console.log(value.data.onCreateChatMessage);
+          setChatMessages((prev) => [...prev, value.data.onCreateChatMessage]);
+        }
+      })
+    
+    return () => sub.unsubscribe()
   }, [chatGroup]);
 
   const handleSendMessage = async (e) => {
@@ -47,7 +71,6 @@ function MessageContainer({ chatGroup, sender, receiver }) {
       });
 
       // update
-      setChatMessages([...chatMessages, newMessageData]);
       setNewMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
@@ -56,137 +79,44 @@ function MessageContainer({ chatGroup, sender, receiver }) {
 
   const sortedChatMessages = chatMessages.slice().sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
-
   // add waiting
   if (!chatGroup || !chatGroup.id) {
     return <div>Loading...</div>;
   }
-  console.log("TIMESTAMP: ",chatMessages.createdAt);
+
   return (
     <div>
-      <div className="chatbox">
+      <div className={`chatbox ${isBlurActive ? 'blur-effect' : ''}`}>
         {sortedChatMessages.map((message) => (
-          <div
-            className={`chat-messages ${message.senderID === sender ? 'my_message' : 'frnd_message'}`}
+          <MessageComponent
             key={message.id}
-          >
-            <p>
-              {message.data}
-              <br />
-              <span>
-                <time
-                  dateTime={message.createdAt}
-                  className="flex-none py-0.5 text-xs leading-5 text-gray-500"
-                >
-                  {isValidDate(message.createdAt)
-                  ? intlFormatDistance(new Date(message.createdAt), new Date())
-                  : 'Invalid Date'}
-                </time>
-              </span>
-            </p>
-          </div>
+            message={message}
+            sender={sender}
+          />
         ))}
       </div>
 
       <div className="chatbox_input">
-        {/* This is a bad example */}
-        <button name="happy-outline">emoji</button>
-        <button name="attach-outline">file</button>
-        <input
-            type="text"
-            placeholder="Type a message"
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-          />
-          <button name="send" id="send-button" onClick={handleSendMessage}>Send</button>
+        <FileUploadComponent 
+          sender={sender}
+          receiver={receiver}
+          chatGroupId={chatGroup.id}
+        />
 
-        <form onSubmit={handleSendMessage}>
-          
-        </form>
+        <TextInputComponent
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          onKeyPress={(e) => {
+            if (e && e.key === 'Enter') handleSendMessage(e);
+          }}
+        />
+
+        <FaPaperPlane className="icon" name="send" id="send-button"
+           onClick={handleSendMessage} style={{ fontSize: '40px', color: '#aaa' }} />
+       
       </div>
     </div>
   );
 }
 
-//something off with time, so added a checker
-function isValidDate(dateString) {
-  const date = new Date(dateString);
-  return !isNaN(date.getTime());
-}
 export default MessageContainer;
-
-// import React from 'react';
-
-
-// function MessageContainer(/*{senderId, receiverId}*/) {
-//   /*const receiverId = 0;
-//   if (receiverId == 0)
-//   {
-//     return
-//     (
-//       <div className="chatbox">
-
-//       </div>
-//     );
-//   }*/
-//   return (
-//   <div className="chatbox">
-//     <div className="chat-messages my_message">
-//       <p>Hi<br /><span>9:25</span></p>
-//     </div>
-//     <div className="chat-messages frnd_message">
-//       <p>Hello<br /><span>9:25</span></p>
-//     </div>
-//     <div className="chat-messages frnd_message">
-//       <p>Hello<br /><span>9:25</span></p>
-//     </div>
-//     <div className="chat-messages frnd_message">
-//       <p>Hello<br /><span>9:25</span></p>
-//     </div>
-//     <div className="chat-messages frnd_message">
-//       <p>Hello<br /><span>9:25</span></p>
-//     </div>
-//     <div className="chat-messages frnd_message">
-//       <p>Hello<br /><span>9:25</span></p>
-//     </div>
-//     <div className="chat-messages frnd_message">
-//       <p>Hello<br /><span>9:25</span></p>
-//     </div>
-//     <div className="chat-messages frnd_message">
-//       <p>Hello<br /><span>9:25</span></p>
-//     </div>
-//     <div className="chat-messages frnd_message">
-//       <p>Hello<br /><span>9:25</span></p>
-//     </div>
-//     <div className="chat-messages frnd_message">
-//       <p>Hello<br /><span>9:25</span></p>
-//     </div>
-//     <div className="chat-messages frnd_message">
-//       <p>Hello<br /><span>9:25</span></p>
-//     </div>
-//     <div className="chat-messages frnd_message">
-//       <p>Hello<br /><span>9:25</span></p>
-//     </div>
-//     <div className="chat-messages frnd_message">
-//       <p>Hello<br /><span>9:25</span></p>
-//     </div>
-//     <div className="chat-messages frnd_message">
-//       <p>Hello<br /><span>9:25</span></p>
-//     </div>
-//     <div className="chat-messages frnd_message">
-//       <p>Hello<br /><span>9:25</span></p>
-//     </div>
-//     <div className="chat-messages frnd_message">
-//       <p>Hello<br /><span>9:25</span></p>
-//     </div>
-//     <div className="chat-messages frnd_message">
-//       <p>Hello<br /><span>9:25</span></p>
-//     </div>
-//     <div className="chat-messages frnd_message">
-//       <p>Hello<br /><span>9:25</span></p>
-//     </div>
-//   </div>
-//   );
-// }
-
-// export default MessageContainer;

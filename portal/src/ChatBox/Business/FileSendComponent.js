@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Storage } from 'aws-amplify';
-import * as mutations from "../graphql/mutations";
+import * as mutations from "../../graphql/mutations";
 import { API } from 'aws-amplify';
 
 function FileSendComponent({sender, receiver, chatGroupId, fileData}) {
