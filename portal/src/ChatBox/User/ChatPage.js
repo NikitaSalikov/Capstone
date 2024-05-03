@@ -1,11 +1,13 @@
-import './ChatPage.css';
+import '../ChatPage.css';
 import React, { useState, useEffect } from 'react';
 import ChatList from './ChatList';
 import MessageContainer from './MessageContainer';
 import ChatBot from './ChatBot';
 import { API } from 'aws-amplify';
-import { listChatGroups, listUsers, /*getLocation*/ } from '../../graphql/queries';
-//import { createChatMessage } from '../../graphql/mutations';
+import { listChatGroups, listUsers } from '../../graphql/queries';
+
+import { FaSignOutAlt } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom'; 
 
 //importing authenticator
 import { withAuthenticator } from "@aws-amplify/ui-react";
@@ -91,11 +93,17 @@ function ChatPage({ user, signOut }) {
   const [receivers, setReceivers] = useState([]);
 
   const [chatGroups, setChatGroups] = useState([]);
-  const [activeChat, setActiveChat] = useState(null);
-  const [useBot, setUseBot] = useState(true);
 
+  const [activeChat, setActiveChat] = useState(null);
+  const [useBotList, setUseBotList] = useState([]);
+  const [currUseBot, setCurrUseBot] = useState([true]);
+
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const navigate = useNavigate();
+
+  // Fetch User from DB
   useEffect(() => {
-    // Fetch User from DB
     async function fetchUser() {
       try {
         const result = await API.graphql({
@@ -117,8 +125,8 @@ function ChatPage({ user, signOut }) {
     fetchUser();
   }, [user]);
 
-  useEffect(() => {
-    // Fetch Chat Groups from DB
+  // Fetch Chat Groups from DB
+  useEffect(() => {    
     async function fetchChatGroups() {
       try {
         const result = await API.graphql({
@@ -138,8 +146,8 @@ function ChatPage({ user, signOut }) {
     fetchChatGroups();
   }, [sender]);
 
+  // Fetch Location from DB
   useEffect(() => {
-    // Fetch Location from DB
     async function fetchLocation(locationID) {
       try {
         const result = await API.graphql({
@@ -153,13 +161,41 @@ function ChatPage({ user, signOut }) {
         console.error("Error fetching location:", error);
       }
     }
-    chatGroups.map((chatGroup) => (fetchLocation(chatGroup.locationID))
-    );
+    chatGroups.map((chatGroup) => (fetchLocation(chatGroup.locationID)));
+    setUseBotList(chatGroups.map(() => (true)));
     
   }, [chatGroups]);
 
+  // Set if chatbot should be used for current chat
+  useEffect(() => {
+    if (activeChat)
+    {
+      setCurrUseBot(useBotList[chatGroups.findIndex( i => i.id === activeChat.id)]);
+    }
+  }, [activeChat, chatGroups, useBotList]);
+
+  const handleEndChat = () => {
+    setShowConfirmation(true);
+    setIsConfirmationOpen(true); // Open confirmation modal
+  };
+
+  const handleConfirmEndChat = () => {
+    setShowConfirmation(false);
+    navigate('../ThankYouPage');
+  };
+
+  const handleCancelEndChat = () => {
+    setShowConfirmation(false);
+    setIsConfirmationOpen(false); // Close confirmation modal
+  };
+
   const ChatChosen = (clickedChatGroup) => {
     setActiveChat(clickedChatGroup);
+  };
+
+  const toggleUsebot = (condition) => {
+    const index = chatGroups.findIndex( i => i.id === activeChat.id);
+    setUseBotList(useBotList.toSpliced(index, 1, condition));
   };
 
   return (
@@ -169,20 +205,8 @@ function ChatPage({ user, signOut }) {
           <div className="userimg">
             <img src="restaurant1.jpeg" className="cover" alt="" />
           </div>
-          <ul className="nav_icons">
-            {senderName}
-            <li>
-              {/*<a href="settings.html">*/}
-                <button name="settings-outline" onClick={() => signOut()}>Setting</button>
-              {/*</a>*/}
-            </li>
-            <li>
-              <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
-            </li>
-            <li>
-              <ion-icon name="ellipsis-vertical"></ion-icon>
-            </li>
-          </ul>
+          {senderName}
+          <FaSignOutAlt className="end-chat" name="end-chat" onClick={handleEndChat} />
         </div>
 
         <div className="search_chat">
@@ -208,7 +232,7 @@ function ChatPage({ user, signOut }) {
             </div>
               
             <h4>
-              {(chatGroups.length === receivers.length) && (receivers.filter((element) => element.id == activeChat.locationID)[0].name)}
+              {(chatGroups.length === receivers.length) && (receivers.filter((element) => element.id === activeChat.locationID)[0].name)}
               <br />
               <span>Online</span>
             </h4>
@@ -223,20 +247,41 @@ function ChatPage({ user, signOut }) {
           </ul>
         </div>
 
-        {activeChat && useBot && (
+        {activeChat && currUseBot && (
           <ChatBot
-            setUseBot={setUseBot}
+            toggleUsebot={toggleUsebot}
             sender={sender}
-            receiver={receivers.filter((element) => element.id == activeChat.locationID)[0]}
+            receiver={receivers.filter((element) => element.id === activeChat.locationID)[0]}
           />
         )}
 
-        {activeChat && !useBot && (
+        {activeChat && !currUseBot && (
         <MessageContainer
           chatGroup={activeChat}
           sender={sender}
           receiver={activeChat.locationID}
+          isBlurActive={isConfirmationOpen} // Pass isConfirmationOpen as isBlurActive prop
         />
+        )}
+
+        {showConfirmation && (
+          <div className="confirmation-modal">
+            <div className="confirmation-content">
+              <p>Are you sure you want to end the chat?</p>
+              <div className="confirmation-buttons">
+                <button className="confirm-button" onClick={handleConfirmEndChat}>Confirm</button>
+                <button className="cancel-button" onClick={handleCancelEndChat}>Cancel</button>
+              </div>
+            </div>
+          </div>
+        )}
+    
+        {/* Overlay for backdrop blur */}
+        <div className={`overlay ${showConfirmation ? 'active' : ''}`}></div>
+    
+        {/* Transparent div to capture clicks */}
+        {showConfirmation && (
+          <div className="click-blocker"></div>
         )}
       </div>
     </div>

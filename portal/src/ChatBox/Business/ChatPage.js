@@ -1,87 +1,179 @@
-import './ChatPage.css';
+import '../ChatPage.css';
 import React, { useState, useEffect } from 'react';
 import ChatList from './ChatList';
 import MessageContainer from './MessageContainer';
-import ChatBot from './ChatBot';
-import { API, graphqlOperation } from 'aws-amplify';
-import { listChatGroups, listUsers, getChatGroup, listChatMessages } from '../../graphql/queries';
-import { createChatMessage } from '../../graphql/mutations';
+import { API } from 'aws-amplify';
+import { listChatGroups, getUser } from '../../graphql/queries';
+
+import { FaSignOutAlt } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom'; 
 
 //importing authenticator
 import { withAuthenticator } from "@aws-amplify/ui-react";
 
+const getLocation = `
+query GetLocation($id: ID!) {
+  getLocation(id: $id) {
+    id
+    amenities {
+      value
+      label
+      icon
+      __typename
+    }
+    address {
+      address
+      unit
+      city
+      country
+      state
+      postalcode
+      __typename
+    }
+    name
+    category
+    businessID
+    description
+    email
+    hours {
+      open
+      startTime
+      endTime
+      name
+      __typename
+    }
+    images {
+      type
+      key
+      __typename
+    }
+    phoneNumber
+    liveView
+    status
+    Reviews {
+      nextToken
+      __typename
+    }
+    LiveSnap {
+      id
+      video
+      expirationUnixTime
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+    latitude
+    longitude
+    keywords
+    locationImage
+    isPublished
+    social {
+      type
+      address
+      __typename
+    }
+    searchField
+    avgRating
+    websiteURL
+    createdAt
+    updatedAt
+    locationLiveSnapId
+    owner
+    __typename
+  }
+}
+`;
 
-function ChatPage({ user, signOut }) {
-  const [sender, setSenderID] = useState("3451f67c-c692-4a06-aff3-140c79434145");
-  const [receiver, setReceiverID] = useState("");
+function ChatPage({ location, signOut }) {
+  const [sender, setSenderID] = useState("");
   const [senderName, setSenderName] = useState("");
-  const [chatGroup, setChatGroup] = useState([]);
+  //const [receiver, setReceiverID] = useState("");
+  const [receivers, setReceivers] = useState([]);
+  const [chatGroups, setChatGroups] = useState([]);
   const [activeChat, setActiveChat] = useState(null);
-  const [useBot, setUseBot] = useState(true);
-/*
+
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const navigate = useNavigate();
+
+  // Fetch location from DB
   useEffect(() => {
-    setSenderID("3451f67c-c692-4a06-aff3-140c79434145"/*"902ecd81-37c1-498d-ae23-e964d70d0f91"); // hardcoded for now
-  }, []);
-*/
-  useEffect(() => {
-    // Fetch User from DB
-    async function fetchUser() {
+    async function fetchLocation() {
+      
       try {
         const result = await API.graphql({
-          query: listUsers,
-          variables: {
-            filter: {
-              cognitoUser: {eq: user.username}
-            }
-          }
+          query: getLocation,
+          variables: {id: location},
+          authMode: "API_KEY"
         })
-        const name = result.data.listUsers.items[0].givenName + " " + result.data.listUsers.items[0].familyName;
+        const name = result.data.getLocation.name;
         setSenderName(name);
+        setSenderID(result.data.getLocation.id);
       }
       catch(error) {
         console.error("Error fetching user name", error);
       }
     }
+    fetchLocation();
+  }, [location]);
 
-    // fetching ChatGroups
+  // Fetch Chat Groups from DB
+  useEffect(() => {    
     async function fetchChatGroups() {
       try {
         const result = await API.graphql({
           query: listChatGroups,
           variables: {
             filter: {
-              userID: {eq: sender}
+              locationID: {eq: sender}
             }
           }
         });
-        //console.log("Use effect result:", result.data.listChatGroups.items);
-        setChatGroup(result.data.listChatGroups.items);
+        //console.log("Chat Groups:", result.data.listChatGroups.items);
+        setChatGroups(result.data.listChatGroups.items);
       } catch (error) {
         console.error("Error fetching chat groups:", error);
       }
     }
-
-    fetchUser();
     fetchChatGroups();
   }, [sender]);
-  /*
+
+  // Fetch Users from DB
   useEffect(() => {
-    async function fetchLocation(locationID) {
+    async function fetchUser(userID) {
       try {
         const result = await API.graphql({
-          query: getLocation,
-          variables: {id: locationID}
+          query: getUser,
+          variables: {id: userID},
+          //authMode: "API_KEY"
         });
-        console.log("Use effect result:", result.data.listChatGroups.items);
-        setChatGroup(result.data.listChatGroups.items);
+        console.log("Get user:", result.data.getUser);
+        setReceivers(oldreceivers => [...oldreceivers, result.data.getUser]);
       } catch (error) {
-        console.error("Error fetching location:", error);
+        console.error("Error fetching user:", error);
       }
     }
+    chatGroups.map((chatGroup) => (fetchUser(chatGroup.userID)));
+    //setUseBotList(chatGroups.map(() => (true)));
 
-    fetchLocation("902ecd81-37c1-498d-ae23-e964d70d0f91")
-  }, [sender]);
-  */
+  }, [chatGroups]);
+
+  const handleEndChat = () => {
+    setShowConfirmation(true);
+    setIsConfirmationOpen(true); // Open confirmation modal
+  };
+
+  const handleConfirmEndChat = () => {
+    setShowConfirmation(false);
+    navigate('../ThankYouPage');
+  };
+
+  const handleCancelEndChat = () => {
+    setShowConfirmation(false);
+    setIsConfirmationOpen(false); // Close confirmation modal
+  };
+
   const ChatChosen = (clickedChatGroup) => {
     setActiveChat(clickedChatGroup);
   };
@@ -93,20 +185,8 @@ function ChatPage({ user, signOut }) {
           <div className="userimg">
             <img src="restaurant1.jpeg" className="cover" alt="" />
           </div>
-          <ul className="nav_icons">
-            {senderName}
-            <li>
-              {/*<a href="settings.html">*/}
-                <button name="settings-outline" onClick={() => signOut()}>Setting</button>
-              {/*</a>*/}
-            </li>
-            <li>
-              <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
-            </li>
-            <li>
-              <ion-icon name="ellipsis-vertical"></ion-icon>
-            </li>
-          </ul>
+          {senderName}
+          <FaSignOutAlt className="end-chat" name="end-chat" onClick={handleEndChat} />
         </div>
 
         <div className="search_chat">
@@ -117,25 +197,28 @@ function ChatPage({ user, signOut }) {
         </div>
         
         <ChatList
-          chatGroups={chatGroup}
+          chatGroups={chatGroups}
+          receivers={receivers}
           onChatGroupClick={ChatChosen}
         />
       </div>
 
       <div className="rightSide">
         <div className="header">
-          <div className="imgText">
-            <div className="userimg">
-              <img src="profile1.jpeg" className="cover" alt="User" />
-            </div>
-            
-            <h4>
-              {activeChat && (activeChat.locationID)}
+          {activeChat && (activeChat.locationID) && (
+            <div className="imgText">
+              <div className="userimg">
+                <img src="profile1.jpeg" className="cover" alt="User" />
+              </div>
+                
+              <h4>
+                {(chatGroups.length === receivers.length) && (receivers.filter((element) => element.id === activeChat.userID)[0].givenName)}
                 <br />
                 <span>Online</span>
-            </h4>
+              </h4>
 
-          </div>
+            </div>
+          )}
           <ul className="nav_icons">
             <li>
               <ion-icon name="ellipsis-horizontal"></ion-icon>
@@ -143,154 +226,37 @@ function ChatPage({ user, signOut }) {
           </ul>
         </div>
 
-        {activeChat && useBot && (
-          <ChatBot
-            setUseBot={setUseBot}
-            sender={sender}
-            receiver={receiver}
-          />
-        )}
-
-        {activeChat && !useBot && (
+        {activeChat && (
         <MessageContainer
           chatGroup={activeChat}
           sender={sender}
           receiver={activeChat.locationID}
+          isBlurActive={isConfirmationOpen} // Pass isConfirmationOpen as isBlurActive prop
         />
+        )}
+
+        {showConfirmation && (
+          <div className="confirmation-modal">
+            <div className="confirmation-content">
+              <p>Are you sure you want to end the chat?</p>
+              <div className="confirmation-buttons">
+                <button className="confirm-button" onClick={handleConfirmEndChat}>Confirm</button>
+                <button className="cancel-button" onClick={handleCancelEndChat}>Cancel</button>
+              </div>
+            </div>
+          </div>
+        )}
+    
+        {/* Overlay for backdrop blur */}
+        <div className={`overlay ${showConfirmation ? 'active' : ''}`}></div>
+    
+        {/* Transparent div to capture clicks */}
+        {showConfirmation && (
+          <div className="click-blocker"></div>
         )}
       </div>
     </div>
   );
+}
 
-/*
-  return (
-    <div className="chat-container">
-      <div className="leftSide">
-        <ChatList
-          chatGroups={chatGroup}
-          onChatGroupClick={ChatChosen}
-        />
-      </div>
-
-        <div className="rightSide">
-          {activeChat && (
-            <div>
-              <h3>Chat with {activeChat.locationID}</h3>
-              <MessageContainer
-                chatGroup={activeChat}
-                sender={sender}
-                receiver={activeChat.locationID}
-              />
-            </div>
-          )}
-        </div>
-      </div>
-    );*/
-  }
-
-export default withAuthenticator(ChatPage);
-
-// import './ChatPage.css';
-// import React, { useState } from 'react';
-// import ChatList from './ChatList';
-// import MessageContainer from './MessageContainer';
-
-// //importing authenticator
-// import { withAuthenticator } from "@aws-amplify/ui-react";
-
-// function ChatPage({user, signOut})
-// {
-//     //console.log(user);
-
-//     const [message, setMessage] = useState(""); // State to store the message
-//     const [chatMessages, setChatMessages] = useState([]); // State to store chat messages
-    
-//     const [sender, setSenderID] = useState("902ecd81-37c1-498d-ae23-e964d70d0f91");
-//     const [receiver, setReceiverID] = useState("902ecd81-37c1-498d-ae23-e964d70d0f91");
-    
-//     // send click event function
-//     const handleSendClick = () => {
-//       const newMessage = { text: message, sender: 'my_message' };
-//       setChatMessages([...chatMessages, newMessage]); // Add the message to chatMessages
-//       setMessage(''); 
-//     };
-//     /*
-//     React.useEffect(() => {
-//         // Hard coded for now...
-//         setSenderID('902ecd81-37c1-498d-ae23-e964d70d0f91');
-//         setReceiverID('902ecd81-37c1-498d-ae23-e964d70d0f91');
-//     }, []);
-//     */
-//     return(
-//     <div className="chat-container">
-//         <div className="leftSide">
-//             <div className="header">
-//                 <div className="userimg">
-//                     <img src="restaurant1.jpeg" className="cover" alt={sender} />
-//                 </div>
-//                 <ul className="nav_icons">
-//                     <li>
-//                         {/*<a href="settings.html">*/}
-//                             <button name="settings-outline" onClick={() => signOut()}>Setting</button>
-//                         {/*</a>*/}
-//                     </li>
-//                     <li>
-//                         <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
-//                     </li>
-//                     <li>
-//                         <ion-icon name="ellipsis-vertical"></ion-icon>
-//                     </li>
-//                 </ul>
-//             </div>
-//             <div className="search_chat">
-//                 <div>
-//                     <input type="text" placeholder="Search chat" />
-//                     <button name="SearchOutline">?</button>
-//                 </div>
-//             </div>
-
-//             <ChatList
-//                 userId={sender}
-//                 setReceiverID={setReceiverID}
-//             />
-
-//         </div>
-        
-//         <div className="rightSide">
-//             <div className="header">
-//                 <div className="imgText">
-//                     <div className="userimg">
-//                         <img src="profile1.jpeg" className="cover" alt="User" />
-//                     </div>
-//                     <h4>
-//                         {receiver}
-//                         <br />
-//                         <span>Online</span>
-//                     </h4>
-//                 </div>
-//                 <ul className="nav_icons">
-//                     <li>
-//                         <ion-icon name="ellipsis-horizontal"></ion-icon>
-//                     </li>
-//                 </ul>
-//             </div>
-
-//             <MessageContainer />
-
-//             <div className="chatbox_input">
-//                 <button name="happy-outline">emoji</button>
-//                 <button name="attach-outline">file</button>
-//                 <input
-//                 type="text"
-//                 placeholder="Type a message"
-//                 value={message}
-//                 onChange={(e) => setMessage(e.target.value)}
-//                 />
-//                 <button name="send" id="send-button" onClick={handleSendClick}>Send</button>
-//             </div>
-//         </div>
-//     </div>
-//     );
-// }
-
-// export default withAuthenticator(ChatPage);
+export default ChatPage;
